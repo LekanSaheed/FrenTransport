@@ -19,7 +19,10 @@ const FleetShowcase = () => {
         <ul className="flex snap-mandatory -mx-4 scroll-px-4 pl-4 snap-x gap-4 overflow-x-scroll ">
           {fleet.map((fl, id) => {
             return (
-              <li className="snap-start shrink-0 w-[260px] h-[140px]  rounded-[15px] p-4 bg-primary">
+              <li
+                key={id}
+                className="snap-start shrink-0 w-[260px] h-[140px]  rounded-[15px] p-4 bg-primary"
+              >
                 {fl.name}
               </li>
             );
