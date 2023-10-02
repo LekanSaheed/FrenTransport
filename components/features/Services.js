@@ -3,14 +3,8 @@ import Container from "../layout/Container";
 import { Bus, TruckFast, Car } from "iconsax-react";
 import Heading from "../typography/Heading";
 
-interface services {
-  title: string;
-  description: string;
-  bg: string;
-  icon: FunctionComponent;
-}
-const Services: FunctionComponent = () => {
-  const services: Array<services> = [
+const Services = () => {
+  const services = [
     {
       icon: Bus,
       title: "Transportation",
