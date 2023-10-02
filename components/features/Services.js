@@ -51,10 +51,10 @@ const Services = () => {
                     size: 26,
                   })}
                 </div>
-                <Heading className="mb-3" level={1}>
+                <Heading className="mb-3" level={2}>
                   {service.title}
                 </Heading>
-                <p className="text-[16px] tracking-n-3 text-gray-600">
+                <p className="text-[16px] leading-[160%] tracking-n-3 text-gray-600">
                   {service.description}
                 </p>
               </li>

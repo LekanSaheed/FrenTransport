@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <header
-      className={`sticky z-[2] top-0 bg-white relative`}
+      className={` z-[2] top-0 bg-white relative`}
       style={{ boxShadow: "6px 12px 100px -2px rgba(0, 0, 0, 0.05)" }}
     >
       <div className={`${containerClass} flex justify-between items-center`}>
