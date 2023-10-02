@@ -11,7 +11,7 @@ const HeroSection = () => {
         <h1 className="font-bold text-black text-center text-[30px] ">
           Hop On, Be Amazed:
           <br /> <span className="text-primary">FrenBus</span>, Your Travel
-          "Fren."
+          {`"Fren."`}
         </h1>
         <div className="flex gap-4 items-center justify-center mt-[30px] pb-[30px]">
           <Button variant="secondary" label="Book ticket" />
@@ -32,7 +32,14 @@ const HeroSection = () => {
           }}
           className="relative max-sm:h-[50px] max-sm:w-[130px] sm:h-[70px] sm:w-[150px] md:h-[90px] md:w-[170px] lg:h-[100px] lg:w-[220px] "
         >
-          <Image src="/frenbus.png" fill className="object-contain" />
+          <Image
+            quality={100}
+            priority
+            alt="frenbus"
+            src="/frenbus.png"
+            fill
+            className="object-contain"
+          />
         </motion.div>
       </div>
     </section>

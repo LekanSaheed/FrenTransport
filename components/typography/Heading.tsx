@@ -18,10 +18,13 @@ const Heading: FunctionComponent<HeadingProps> = ({
     4: "text-[16px] tracking-n-2",
     5: "text-[14px] tracking-n-1",
   };
-  return React.createElement(`h${level}`, {
-    className: `${className || ""} font-bold ${levelClassNames[level]}`,
-    children,
-  });
+  return React.createElement(
+    `h${level}`,
+    {
+      className: `${className || ""} font-bold ${levelClassNames[level]}`,
+    },
+    children
+  );
 };
 
 export default Heading;
