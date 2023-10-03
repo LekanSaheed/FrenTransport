@@ -27,7 +27,7 @@ const HomeAnimation = () => {
     <motion.div
       animate={{ height: "0", opacity: 0 }}
       transition={{ delay: 5.0 }}
-      className="h-screen overflow-hidden sticky top-0 z-[8] flex items-center justify-center relative bg-tertiary/10"
+      className="h-screen overflow-hidden sticky top-0 z-[8000] flex items-center justify-center relative bg-{#fafafa]"
     >
       <motion.div
         className="relative w-[110px] h-[80px]  "
