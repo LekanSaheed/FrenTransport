@@ -14,7 +14,7 @@ module.exports = {
         ml: "992px",
       },
       colors: {
-        "border-stroke": "#E3E4E6",
+        "border-stroke": "#D7D7D7",
         primary: "#6d46cc",
         secondary: "#06D7A0",
         tertiary: "#CEFAD7",
