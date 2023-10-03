@@ -18,7 +18,7 @@ const HeroSection = () => {
             <h1 className="font-bold text-black text-center text-[30px] md:text-left md:text-[43px] sm:text-[40px]">
               Hop On, Be Amazed:
               <br /> <span className="text-primary">FrenBus</span>, Your Travel{" "}
-              <br />
+              <br className="max-md:hidden" />
               {`"Fren."`}
             </h1>
             <div className="flex gap-4 items-center justify-center mt-[30px] pb-[30px] md:justify-start">
@@ -44,7 +44,7 @@ const HeroSection = () => {
             repeat: Infinity,
             repeatType: "loop",
             repeatDelay: 1,
-            duration: 12,
+            duration: 18,
             type: "tween",
             ease: "linear",
           }}

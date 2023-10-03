@@ -29,7 +29,7 @@ const Wrapper = ({ children }) => {
     );
   };
   return (
-    <div className="overflow-x-hidden">
+    <div className="">
       <div className="max-md:hidden bg-[#FDFDFD] border-b border-b-border-stroke">
         <div className={`${containerClass} !py-3 flex`}>
           <Contact

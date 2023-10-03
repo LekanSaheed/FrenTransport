@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        ml: "992px",
+      },
       colors: {
         "border-stroke": "#E3E4E6",
         primary: "#6d46cc",

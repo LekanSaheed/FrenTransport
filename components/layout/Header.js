@@ -12,10 +12,12 @@ const Header = () => {
 
   return (
     <header
-      className={` z-[2] top-0 bg-white relative`}
+      className={`sticky  z-[2] top-0 bg-white relative`}
       style={{ boxShadow: "6px 12px 100px -2px rgba(0, 0, 0, 0.05)" }}
     >
-      <div className={`${containerClass} flex justify-between items-center`}>
+      <div
+        className={`${containerClass} md:py-5 flex justify-between items-center`}
+      >
         <div className="w-[60px] h-[30px] relative">
           <Image
             src={"/logo.png"}
