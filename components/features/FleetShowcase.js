@@ -2,7 +2,7 @@ import React from "react";
 import Heading from "../typography/Heading";
 import Container from "../layout/Container";
 import Image from "next/image";
-
+import { PiPlugLight, PiWifiHigh } from "react-icons/pi";
 const FleetShowcase = () => {
   const fleet = [
     {
@@ -43,16 +43,23 @@ const FleetShowcase = () => {
                     quality={100}
                   />
                 </div>
-                <p className=" text-gray-600 border-t border-t-border-stroke font-bold tracking-n-5 p-4 text-[20px]">
-                  {fl.name}
-                </p>
+                <div className="flex justify-between items-center text-gray-600 border-t border-t-border-stroke font-bold tracking-n-5 p-4 text-[20px]">
+                  <p>{fl.name}</p>
+                  <div className="flex gap-3 text-secondary">
+                    <PiWifiHigh size={16} />
+                    <PiPlugLight size={16} />
+                  </div>
+                </div>
               </li>
             );
           })}
         </ul>
-        <div className="mx-auto bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[10px] p-4">
-          Each of these vehicles is equipped with WiFi connectivity, providing
-          you with free internet access throughout your journey.
+        <div className="mx-auto  bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[10px] p-4">
+          <p>
+            {" "}
+            Each of these vehicles is equipped with WiFi connectivity, providing
+            you with free internet access throughout your journey.
+          </p>
         </div>
       </Container>
     </section>
