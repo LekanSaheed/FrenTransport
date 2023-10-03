@@ -3,6 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import containerClass from "./containerClass";
 import { Call, Sms } from "iconsax-react";
+import HomeAnimation from "../features/HomeAnimation";
 
 const Wrapper = ({ children }) => {
   const Contact = ({ icon, contact = [], type }) => {
@@ -30,6 +31,7 @@ const Wrapper = ({ children }) => {
   };
   return (
     <div className="">
+      <HomeAnimation />
       <div className="max-md:hidden bg-[#FDFDFD] border-b border-b-border-stroke">
         <div className={`${containerClass} !py-3 flex`}>
           <Contact
