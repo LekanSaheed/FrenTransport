@@ -8,7 +8,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="bg-[#FAFAFA] overflow-x-hidden 
+      className="bg-[#fefefe] overflow-x-hidden 
     h-[calc(100vh-70px)] md:h-[calc(100vh-100px)] bg-city pt-[30px] md:pt-[50px]
      lg:pt-[60px] xl:pt-[80px] bg-contain  bg-no-repeat bg-bottom relative"
     >

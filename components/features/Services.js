@@ -30,7 +30,10 @@ const Services = () => {
     },
   ];
   return (
-    <div id="services" className="py-5 border-b border-b-border-stroke">
+    <div
+      id="services"
+      className="py-6 border-b border-b-border-stroke md:py-8 lg:py-9 xl:py-10"
+    >
       <Heading level={1} className="text-center">
         Our services
       </Heading>
@@ -43,8 +46,14 @@ const Services = () => {
                 className={`${service.bg} md:w-[300px] text-black p-5 rounded-[20px]`}
               >
                 <div
-                  className="text-primary h-[50px] w-[50px] rounded-full bg-white flex 
-                items-center justify-center mb-5"
+                  className={`${
+                    id === 0
+                      ? "text-secondary"
+                      : id === 1
+                      ? "text-orange-500"
+                      : "text-primary"
+                  } h-[50px] w-[50px] rounded-full bg-white flex 
+                items-center justify-center mb-5`}
                 >
                   {React.createElement(service.icon, {
                     variant: "Bulk",

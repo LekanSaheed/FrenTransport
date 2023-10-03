@@ -11,19 +11,23 @@ const FleetShowcase = () => {
     { name: "Sienna 2002", desc: "Lorem Ipsum sitdet armor" },
   ];
   return (
-    <section id="fleet" className="py-5">
+    <section id="fleet" className="py-6 md:py-8 lg:py-9 xl:py-10">
       <Heading className="text-center" level={1}>
         Fleet Showcase
       </Heading>
       <Container>
-        <ul className="flex snap-mandatory -mx-4 scroll-px-4 pl-4 snap-x gap-4 overflow-x-scroll ">
+        <ul className="flex snap-mandatory py-5  -mx-4 scroll-px-4 pl-4 snap-x gap-4 overflow-x-scroll ">
           {fleet.map((fl, id) => {
             return (
               <li
+                style={{ boxShadow: "0px 0px 15px -2px rgba(0, 0, 0, 0.1)" }}
                 key={id}
-                className="snap-start shrink-0 w-[260px] h-[140px]  rounded-[15px] p-4 bg-primary"
+                className="snap-start overflow-hidden border border-border-stroke shrink-0 w-[260px] min-h-[140px]  rounded-[8px]  bg-white"
               >
-                {fl.name}
+                <div className="h-[120px]  bg-[#fdfdfd]"></div>
+                <p className="uppercase border-t border-t-border-stroke font-bold tracking-n-5 p-4 text-[20px]">
+                  {fl.name}
+                </p>
               </li>
             );
           })}
