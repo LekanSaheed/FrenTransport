@@ -6,17 +6,17 @@ import { PiPlugLight, PiWifiHigh } from "react-icons/pi";
 const FleetShowcase = () => {
   const fleet = [
     {
-      name: "Toyota Hiace",
+      name: "Economy Buses",
       desc: "Lorem Ipsum sitdet armor",
       img: "hiace.png",
     },
     {
-      name: "Toyota Sienna",
+      name: "Priority",
       desc: "Lorem Ipsum sitdet armor",
       img: "sienna.jpg",
     },
     {
-      name: "Toyota Camry Spider",
+      name: "VIP Charter",
       desc: "Lorem Ipsum sitdet armor",
       img: "spider.jpg",
     },
