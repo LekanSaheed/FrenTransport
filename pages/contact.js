@@ -1,6 +1,7 @@
 import React from "react";
 import Heading from "../components/typography/Heading";
 import Container from "../components/layout/Container";
+import { Call, Sms, Whatsapp } from "iconsax-react";
 
 const Contact = () => {
   return (
@@ -14,8 +15,10 @@ const Contact = () => {
           </p>
         </div>
         <ul>
-          <li className="p-4 mb-4 tracking-n-3 text-[14px] bg-gray-100">
-            <label className="font-semibold">Email</label>:{" "}
+          <li className="p-4 mb-4 tracking-n-3 flex items-center text-[14px] bg-gray-100">
+            <label className="font-semibold mr-2">
+              <Sms size={20} />
+            </label>
             <a
               className="text-primary font-light"
               href="mailto:hello@frenmotors.com"
@@ -23,10 +26,24 @@ const Contact = () => {
               hello@frenmotors.com
             </a>
           </li>
-          <li className="p-4 mb-4 tracking-n-3 text-[14px] bg-gray-100">
-            <label className="font-semibold">Phone</label>:{" "}
+          <li className="p-4 mb-4 tracking-n-3 flex items-center text-[14px] bg-gray-100">
+            <label className="font-semibold mr-2">
+              <Call size={20} />
+            </label>
             <a className="text-primary font-light" href="tel:08087644926">
               08087644926
+            </a>
+          </li>
+          <li className="p-4 mb-4 tracking-n-3 flex items-center text-[14px] bg-gray-100">
+            <label className="font-semibold mr-2">
+              <Whatsapp size={20} />
+            </label>
+            <a
+              target="_blank"
+              className="text-primary font-light"
+              href="https://wa.me/2348087644926"
+            >
+              https://wa.me/2348087644926
             </a>
           </li>
         </ul>
