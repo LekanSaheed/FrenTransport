@@ -8,21 +8,25 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="bg-[#fefefe] overflow-x-hidden 
+      className="bg-[#F9FAFE] overflow-x-hidden 
     h-[calc(100vh-70px)] md:h-[calc(100vh-100px)] bg-city pt-[30px] md:pt-[50px]
      lg:pt-[60px] xl:pt-[80px] bg-contain  bg-no-repeat bg-bottom relative"
     >
       <Container>
         <div className="md:flex">
           <div className="flex-1">
-            <h1 className="font-bold text-black text-center text-[30px] md:text-left md:text-[43px] sm:text-[40px]">
+            <h1 className="font-bold text-black tracking-n-3 text-center text-[30px] md:text-left md:text-[43px] sm:text-[40px]">
               Hop On, Be Amazed:
               <br /> <span className="text-primary">FrenBus</span>, Your Travel{" "}
               <br className="max-md:hidden" />
               {`"Fren."`}
             </h1>
             <div className="flex gap-4 items-center justify-center mt-[30px] pb-[30px] md:justify-start">
-              <Button variant="secondary" label="Book ticket" />
+              <Button
+                variant="secondary"
+                label="Book ticket"
+                className="!border-primary !text-primary"
+              />
               <Link href="#fleet">
                 {" "}
                 <Button label="View fleet" />

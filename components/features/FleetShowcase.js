@@ -22,7 +22,10 @@ const FleetShowcase = () => {
     },
   ];
   return (
-    <section id="fleet" className="py-6 md:py-8 lg:py-9 xl:py-10">
+    <section
+      id="fleet"
+      className="py-6 md:py-8 lg:py-9 xl:py-10 border-b border-b-border-stroke"
+    >
       <Heading className="text-center" level={1}>
         Fleet Showcase
       </Heading>
@@ -54,7 +57,7 @@ const FleetShowcase = () => {
             );
           })}
         </ul>
-        <div className="mx-auto  bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[10px] p-4">
+        <div className="mx-auto  bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[8px] p-4">
           <p>
             {" "}
             Each of these vehicles is equipped with WiFi connectivity, providing

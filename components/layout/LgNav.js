@@ -8,7 +8,7 @@ const LgNav = () => {
       {links.map((link, id) => {
         return (
           <Link
-            className="mr-9 text-[14px] hover:text-primary last:mr-0"
+            className="mr-9 text-[12px] font-semibold hover:text-primary last:mr-0"
             key={id}
             href={link.path}
           >

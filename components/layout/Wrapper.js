@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import containerClass from "./containerClass";
 import { Call, Sms } from "iconsax-react";
 import HomeAnimation from "../features/HomeAnimation";
+import ReadyToBoard from "../features/ReadyToBoard";
 
 const Wrapper = ({ children }) => {
   const Contact = ({ icon, contact = [], type }) => {
@@ -19,7 +20,7 @@ const Wrapper = ({ children }) => {
               href={type === "tel" ? `tel:${c}` : `mailto:${c}`}
               className={`${
                 id !== 0 && "ml-1"
-              } text-gray-600 hover:text-primary transition text-14px`}
+              } text-gray-600 hover:text-primary transition text-[14px]`}
             >
               {c}
             </a>
@@ -34,16 +35,13 @@ const Wrapper = ({ children }) => {
       <HomeAnimation />
       <div className="max-md:hidden bg-[#FDFDFD] border-b border-b-border-stroke">
         <div className={`${containerClass} !py-3 flex`}>
-          <Contact
-            type={"tel"}
-            icon={Call}
-            contact={["09019724076", "0909358678"]}
-          />
-          <Contact icon={Sms} contact={["lknsaheed@gmail.com"]} />
+          <Contact type={"tel"} icon={Call} contact={["08087644926"]} />
+          <Contact icon={Sms} contact={["help@frenmotors.com"]} />
         </div>
       </div>
       <Header />
       <main>{children}</main>
+      <ReadyToBoard />
       <Footer />
     </div>
   );

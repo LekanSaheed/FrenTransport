@@ -3,8 +3,14 @@ import Container from "./Container";
 
 const Footer = () => {
   return (
-    <footer className="bg-secondary min-h-[200px]">
-      <Container></Container>
+    <footer className="bg-[#192136] text-white min-h-[200px]">
+      <Container>
+        <div className="mt-[100px] text-[10px] text-center tracking-n-2">
+          Copywright &copy; 2021 - {new Date().getFullYear()}{" "}
+          <span className="font-semibold">FrenMotors, ltd</span>. All rights
+          reserved.
+        </div>
+      </Container>
     </footer>
   );
 };
