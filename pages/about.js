@@ -1,23 +1,21 @@
 import React from "react";
-import Container from "../layout/Container";
-import Heading from "../typography/Heading";
-import Link from "next/link";
+import Heading from "../components/typography/Heading";
+import Container from "../components/layout/Container";
 
 const About = () => {
   return (
-    <section id="about" className="py-6 md:py-8 lg:py-9 xl:py-10">
-      <Heading className="text-center" level={1}>
-        About Fren<span className="text-primary">Motors</span>
-      </Heading>
-      <Container>
-        <p className="text-center font-light tracking-n-3 text-[12px] text-gray-500 p-4 border rounded-[8px] border-border-stroke leading-[160%]">
+    <Container className="mb-6">
+      <div>
+        <Heading level={1} className="mb-2">
+          About Fren<span className="text-primary">Motors</span>
+        </Heading>
+        <p className="font-light tracking-n-3 text-gray-500 text-[14px] text-gray-500 leading-[160%]">
           FrenMotors is a Nigerian Modern, smart mobility provider which since
           2021, has been changing the way thousands of people in Nigeria are
           traveling, Our vision is to provide anyone who wants to travel in
           Nigeria with smart, sustainable mobility and ease of booking.
           Providing thousands of travelers with a comfortable, affordable, smart
-          travel experience is our biggest motivation.
-          {/* The smart long-distance
+          travel experience is our biggest motivation. The smart long-distance
           buses meet the highest standards of comfort, safety and environmental
           protection, and offers a smart alternative to private transport. We
           are a technology-focused company that harnesses physical and digital
@@ -31,18 +29,10 @@ const About = () => {
           system, the FrenBus app, free Wifi, free charging outlets, GPS live
           tracking, and automated punctuality management, we are making a new
           way of traveling possible. Smart grid planning and dynamic price
-          management mean we can give our customers the best possible offering. */}
+          management mean we can give our customers the best possible offering.
         </p>
-        <p className="text-center my-5">
-          <Link
-            href={"/about"}
-            className="font-semibold text-[13px] text-primary"
-          >
-            View all
-          </Link>
-        </p>
-      </Container>
-    </section>
+      </div>
+    </Container>
   );
 };
 

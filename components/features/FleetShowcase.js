@@ -57,7 +57,7 @@ const FleetShowcase = () => {
             );
           })}
         </ul>
-        <div className="mx-auto  bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[8px] p-4">
+        <div className="mx-auto font-light bg-tertiary/10 text-[12px] border border-border-stroke tracking-n-2 text-gray-500 rounded-[8px] p-4">
           <p>
             {" "}
             Each of these vehicles is equipped with WiFi connectivity, providing

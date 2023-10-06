@@ -15,7 +15,7 @@ const HeroSection = () => {
       <Container>
         <div className="md:flex">
           <div className="flex-1">
-            <h1 className="font-bold text-black tracking-n-3 text-center text-[30px] md:text-left md:text-[43px] sm:text-[40px]">
+            <h1 className="font-bold text-black tracking-n-5 text-center text-[30px] md:text-left md:text-[43px] sm:text-[40px]">
               Hop On, Be Amazed:
               <br /> <span className="text-primary">FrenBus</span>, Your Travel{" "}
               <br className="max-md:hidden" />

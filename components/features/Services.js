@@ -63,7 +63,7 @@ const Services = () => {
                 <Heading className="mb-3" level={2}>
                   {service.title}
                 </Heading>
-                <p className="text-[14.8px] leading-[160%] tracking-n-3 text-gray-600">
+                <p className="text-[14.8px] font-light leading-[160%] tracking-n-3 text-gray-600">
                   {service.description}
                 </p>
               </li>
