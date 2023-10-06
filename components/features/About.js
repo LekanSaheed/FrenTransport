@@ -10,7 +10,7 @@ const About = () => {
         About Fren<span className="text-primary">Motors</span>
       </Heading>
       <Container>
-        <p className="text-center font-light tracking-n-3 text-[12px] text-gray-500 p-4 border rounded-[8px] border-border-stroke leading-[160%]">
+        <p className="text-center font-light md:text-[14px] tracking-n-3 text-[12px] text-gray-500 p-4 border rounded-[8px] border-border-stroke leading-[160%]">
           FrenMotors is a Nigerian Modern, smart mobility provider which since
           2021, has been changing the way thousands of people in Nigeria are
           traveling, Our vision is to provide anyone who wants to travel in

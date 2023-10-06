@@ -6,6 +6,7 @@ import { CloseSquare, HambergerMenu } from "iconsax-react";
 import { motion } from "framer-motion";
 import MobileNav from "./MobileNav";
 import { MdClose } from "react-icons/md";
+import Link from "next/link";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -18,7 +19,7 @@ const Header = () => {
       <div
         className={`${containerClass} relative md:py-5 flex justify-between items-center`}
       >
-        <div className="w-[60px] h-[30px] relative">
+        <Link href={"/"} className="w-[60px] h-[30px] relative">
           <Image
             src={"/logo.png"}
             fill
@@ -27,7 +28,7 @@ const Header = () => {
             alt="logo"
             priority
           />
-        </div>
+        </Link>
         <LgNav />
         <motion.div
           onClick={() => setOpen(!open)}

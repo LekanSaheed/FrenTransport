@@ -35,7 +35,12 @@ const HeroSection = () => {
           </div>
           <div className="mt-[40px] flex-1 md:mt-0">
             <div className="relative h-[300px] mx-auto w-[260px]">
-              <Image src="/travel.svg" className="object-contain " fill />
+              <Image
+                src="/travel.svg"
+                className="object-contain "
+                fill
+                alt="Travel"
+              />
             </div>
           </div>
         </div>

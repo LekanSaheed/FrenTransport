@@ -7,8 +7,10 @@ const Footer = () => {
       <Container>
         <div className="mt-[100px] text-[10px] text-center tracking-n-2">
           Copyright &copy; 2021 - {new Date().getFullYear()}{" "}
-          <span className="font-semibold">FrenMotors ltd</span>. All rights
-          reserved.
+          <span className="font-semibold">
+            <span className="text-gray-300">Fren</span>Motors Ltd
+          </span>
+          . All rights reserved.
         </div>
       </Container>
     </footer>
