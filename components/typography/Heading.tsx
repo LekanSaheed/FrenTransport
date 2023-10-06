@@ -12,7 +12,7 @@ const Heading: FunctionComponent<HeadingProps> = ({
   children,
 }) => {
   const levelClassNames = {
-    1: "text-[25px] tracking-n-4",
+    1: "text-[25px] tracking-n-4 md:text-[30px] lg:text-[32px]",
     2: "text-[21px] tracking-n-3",
     3: "text-[18px] tracking-n-2",
     4: "text-[16px] tracking-n-2",

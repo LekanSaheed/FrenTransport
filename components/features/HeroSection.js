@@ -22,11 +22,15 @@ const HeroSection = () => {
               {`"Fren."`}
             </h1>
             <div className="flex gap-4 items-center justify-center mt-[30px] pb-[30px] md:justify-start">
-              <Button
-                variant="secondary"
-                label="Book ticket"
-                className="!border-primary !text-primary"
-              />
+              <Link target="_blank" href={"https://wa.me/2348087644926"}>
+                {" "}
+                <Button
+                  variant="secondary"
+                  label="Book ticket"
+                  className="!border-primary !text-primary"
+                />
+              </Link>
+
               <Link href="#fleet">
                 {" "}
                 <Button label="View fleet" />

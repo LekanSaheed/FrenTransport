@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "../layout/Container";
 import Button from "../Button";
+import Link from "next/link";
 
 const ReadyToBoard = () => {
   return (
@@ -12,11 +13,13 @@ const ReadyToBoard = () => {
             <span className="text-[#6653BB]">Book a ticket now.</span>
           </h1>
           <div className="flex justify-end mt-6">
-            <Button
-              className="!border-primary !text-primary"
-              variant="secondary"
-              label="Book ticket"
-            />
+            <Link target="_blank" href={"https://wa.me/2348087644926"}>
+              <Button
+                className="!border-primary !text-primary"
+                variant="secondary"
+                label="Book ticket"
+              />
+            </Link>
           </div>
         </div>
       </Container>
