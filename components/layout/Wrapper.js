@@ -36,7 +36,7 @@ const Wrapper = ({ children }) => {
       <div className="max-md:hidden bg-[#FDFDFD] border-b border-b-border-stroke">
         <div className={`${containerClass} !py-3 flex`}>
           <Contact type={"tel"} icon={Call} contact={["08087644926"]} />
-          <Contact icon={Sms} contact={["help@frenmotors.com"]} />
+          <Contact icon={Sms} contact={["hello@frenmotors.com"]} />
         </div>
       </div>
       <Header />
