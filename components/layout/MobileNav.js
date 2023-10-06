@@ -6,7 +6,7 @@ import Link from "next/link";
 const MobileNav = ({ open, setOpen }) => {
   return (
     <motion.div
-      className={`bg-primary absolute top-0 right-0 mobile-nav
+      className={`bg-primary fixed top-0 right-0 mobile-nav
         text-white rounded-bl-full h-[50vh] p-5 w-[50vh] z-[2] ${
           open ? "scale-1" : "scale-0"
         }`}
