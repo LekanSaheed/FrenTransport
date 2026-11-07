@@ -1,7 +1,8 @@
 import React from "react";
-import Heading from "../components/typography/Heading";
-import Container from "../components/layout/Container";
+
 import { Call, Sms, Whatsapp } from "iconsax-react";
+import Container from "@/components/layout/Container";
+import Heading from "@/components/typography/Heading";
 
 const Contact = () => {
   return (

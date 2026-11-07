@@ -1,9 +1,17 @@
+"use client";
+
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import links from "./links";
 import Link from "next/link";
 
-const MobileNav = ({ open, setOpen }) => {
+const MobileNav = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (bool: boolean) => void;
+}) => {
   return (
     <motion.div
       className={`bg-primary fixed top-0 right-0 mobile-nav

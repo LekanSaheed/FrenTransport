@@ -1,39 +1,49 @@
+// "use client";
 import React, { Fragment } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import containerClass from "./containerClass";
-import { Call, Sms } from "iconsax-react";
-import HomeAnimation from "../features/HomeAnimation";
-import ReadyToBoard from "../features/ReadyToBoard";
+import { Call, Icon, Sms } from "iconsax-react";
+import HomeAnimation from "../landing-page/HomeAnimation";
+import ReadyToBoard from "../landing-page/ReadyToBoard";
 import { DefaultSeo } from "next-seo";
 
-const Wrapper = ({ children }) => {
-  const Contact = ({ icon, contact = [], type }) => {
-    return (
-      <div className="flex items-center first:border-r border-r-emerald-600 first:pr-4 last:ml-4">
-        {React.createElement(icon, {
-          size: 16,
-          className: "mr-2 text-primary",
-        })}{" "}
-        {contact.map((c, id) => (
-          <Fragment key={id}>
-            <a
-              href={type === "tel" ? `tel:${c}` : `mailto:${c}`}
-              className={`${
-                id !== 0 && "ml-1"
-              } text-gray-600 hover:text-primary transition text-[14px]`}
-            >
-              {c}
-            </a>
-            {id !== contact.length - 1 && ","}
-          </Fragment>
-        ))}
-      </div>
-    );
-  };
+const Contact = ({
+  icon,
+  contact = [],
+  type,
+}: {
+  icon: Icon;
+  contact?: string[];
+  type?: string;
+}) => {
+  return (
+    <div className="flex items-center first:border-r border-r-emerald-600 first:pr-4 last:ml-4">
+      {React.createElement(icon, {
+        size: 16,
+        className: "mr-2 text-primary",
+      })}{" "}
+      {contact.map((c, id) => (
+        <Fragment key={id}>
+          <a
+            href={type === "tel" ? `tel:${c}` : `mailto:${c}`}
+            className={`${
+              id !== 0 && "ml-1"
+            } text-gray-600 hover:text-primary transition text-[14px]`}
+          >
+            {c}
+          </a>
+          {id !== contact.length - 1 && ","}
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <DefaultSeo
+      {/* <DefaultSeo
         twitter={{
           handle: "@FrenMotors",
           site: "@frenmotors",
@@ -41,7 +51,7 @@ const Wrapper = ({ children }) => {
         }}
         title="FrenMotors: Book Bus Travel Tickets in Nigeria with FrenBus from ₦2,999."
         description="Traveling in Nigeria is hassle-free with FrenBus modern and comfortable buses, frequent connections, and reliable schedules. Our extensive network spans."
-      />
+      /> */}
 
       <div className="">
         <HomeAnimation />

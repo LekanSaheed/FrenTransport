@@ -40,6 +40,7 @@ const FleetShowcase = () => {
               >
                 <div className="h-[160px]  bg-[#fdfdfd] relative">
                   <Image
+                    alt={fl.name}
                     className="object-cover"
                     src={`/fleet/${fl.img}`}
                     fill

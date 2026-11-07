@@ -1,8 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Breakpoints */
+  --breakpoint-ml: 992px;
+
+  /* Colors */
+  --color-border-stroke: #d7d7d7;
+  --color-primary: #6d46cc;
+  --color-secondary: #06d7a0;
+  --color-tertiary: #cefad7;
+  --color-black: #2a2a2a;
+
+  /* Background images */
+  --background-image-city: url("/city.png");
+}
 
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Light.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Light.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 300;
@@ -10,49 +26,50 @@
 
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Regular.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Regular.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 400;
 }
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Medium.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Medium.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 500;
 }
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Semibold.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Semibold.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 600;
 }
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Bold.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Bold.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 700;
 }
+
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Heavy.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Heavy.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 800;
 }
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Black.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Black.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 900;
 }
 @font-face {
   font-family: sf;
-  src: url(./fonts/sfpro/SF-Pro-Text-Heavy.otf) format("opentype");
+  src: url(../public/fonts/sfpro/SF-Pro-Text-Heavy.otf) format("opentype");
   font-style: normal;
   unicode-range: U+0020-007F; /* The bare minimum for the English Language */
   font-weight: 800;
@@ -124,6 +141,3 @@ a {
   border-radius: 4px;
   /* box-shadow: 0 0 10px rgba(0 0 0 / 17%); */
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import containerClass from "./containerClass";
 import LgNav from "./LgNav";

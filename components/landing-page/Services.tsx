@@ -50,8 +50,8 @@ const Services = () => {
                     id === 0
                       ? "text-secondary"
                       : id === 1
-                      ? "text-orange-500"
-                      : "text-primary"
+                        ? "text-orange-500"
+                        : "text-primary"
                   } h-[50px] w-[50px] rounded-full bg-white flex 
                 items-center justify-center mb-5`}
                 >

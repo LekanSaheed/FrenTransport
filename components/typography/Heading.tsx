@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 
 interface HeadingProps {
   level: string | number;
-  className: string;
+  className?: string;
   children: any;
 }
 
@@ -11,7 +11,7 @@ const Heading: FunctionComponent<HeadingProps> = ({
   className,
   children,
 }) => {
-  const levelClassNames = {
+  const levelClassNames: Record<string | number, string> = {
     1: "text-[25px] tracking-n-4 md:text-[30px] lg:text-[32px]",
     2: "text-[21px] tracking-n-3",
     3: "text-[18px] tracking-n-2",
@@ -23,7 +23,7 @@ const Heading: FunctionComponent<HeadingProps> = ({
     {
       className: `${className || ""} font-bold ${levelClassNames[level]}`,
     },
-    children
+    children,
   );
 };
 
