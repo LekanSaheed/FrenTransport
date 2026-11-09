@@ -74,24 +74,28 @@ export default function PaymentResult() {
 
   const b = view.booking;
   const status = view.payment.status;
-  const confirmed = b?.status === "confirmed";
-  const refunding = status === "success" && !confirmed;
+  const isChange = view.payment.purpose === "amendment";
+  const confirmed = b?.status === "confirmed" && !view.payment.refunding;
+  const refunding = status === "success" && (!confirmed || !!view.payment.refunding);
 
   return (
     <Card className="mx-auto max-w-xl text-center">
       {confirmed && (
         <>
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-[28px] text-emerald-600">✓</div>
-          <h2 className="mt-4 text-[22px] font-bold tracking-n-4">Booking confirmed</h2>
-          <p className="mt-1 text-[14px] text-gray-500">We&apos;ve emailed your confirmation and receipt.</p>
+          <h2 className="mt-4 text-[22px] font-bold tracking-n-4">{isChange ? "Travel date changed" : "Booking confirmed"}</h2>
+          <p className="mt-1 text-[14px] text-gray-500">
+            {isChange ? "Your booking is now on the new trip. We've emailed your updated details and receipt." : "We've emailed your confirmation and receipt."}
+          </p>
         </>
       )}
       {refunding && (
         <>
-          <h2 className="text-[20px] font-bold tracking-n-4">We&apos;re refunding your payment</h2>
+          <h2 className="text-[20px] font-bold tracking-n-4">{isChange ? "We're refunding your change charge" : "We're refunding your payment"}</h2>
           <Alert tone="warning" className="mt-3 text-left">
-            We received your payment but couldn&apos;t apply it — the reservation had expired and was taken, or the booking changed
-            while you were paying. A full refund has been started and we&apos;ve emailed you the details.
+            {isChange
+              ? "We received your payment, but the seats on the new trip were taken before it arrived. Your booking stays on its original trip, and a full refund of the change charge has been started."
+              : "We received your payment but couldn't apply it: the reservation had expired and was taken, or the booking changed while you were paying. A full refund has been started and we've emailed you the details."}
           </Alert>
         </>
       )}

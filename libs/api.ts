@@ -1,22 +1,15 @@
-import type {
-  BookingDetails,
-  BookingSummary,
-  CancellationQuote,
-  HireAvailability,
-  HireCategory,
-  Location,
-  PaymentStatusView,
-  TripDetails,
-  TripSummary,
-} from "./types";
+import type { BookingDetails, BookingSummary, CancellationQuote, HireAvailability, HireCategory, Location, PaymentStatusView, TripDetails, TripSummary, BookingChanges, DateChangeOption, PendingDateChange } from "./types";
 
 /**
  * Thin client for the Obere Transport API. Every response is
  * `{ success: true, data }` or `{ success: false, error: { code, message, details } }`.
  * No secrets live here: payment and email keys stay on the backend.
  */
-/** Same-origin by default: Next.js forwards /api/* to the backend (see next.config.ts). */
-const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "/api/v1").replace(/\/$/, "");
+/**
+ * The browser calls the API directly (no proxy through this app), e.g. https://api.obere.ng/api/v1.
+ * Session cookies are the API's own, sent with `credentials: "include"`.
+ */
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1").replace(/\/$/, "");
 
 export class ApiError extends Error {
   constructor(
@@ -45,7 +38,7 @@ export interface RequestOptions {
 }
 
 export async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
-  const url = new URL(BASE_URL + path, typeof window === "undefined" ? "http://localhost" : window.location.origin);
+  const url = new URL(BASE_URL + path);
   for (const [k, v] of Object.entries(opts.query ?? {})) if (v !== undefined && v !== "") url.searchParams.set(k, String(v));
 
   const headers: Record<string, string> = { Accept: "application/json" };
@@ -60,6 +53,7 @@ export async function request<T>(path: string, opts: RequestOptions = {}): Promi
       headers,
       body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
       cache: "no-store",
+      credentials: "include", // the API is on another origin; send and accept its session cookies
     });
   } catch {
     throw new ApiError(0, "NETWORK_ERROR", "We couldn't reach our servers. Check your connection and try again.");
@@ -82,6 +76,7 @@ export interface Contact {
 export interface PublicConfig {
   contact: { supportEmail: string; supportPhone: string };
   booking: { seatHoldMinutes: number; bookingCutoffMinutes: number };
+  amendments: { dateChangeCharge: "percentage" | "fare_difference"; feePercent: number; dateChangeCutoffHours: number };
 }
 
 export const api = {
@@ -147,6 +142,26 @@ export const api = {
       }),
     acceptQuote: (ref: string, token: string | undefined) =>
       request<BookingDetails>(`/manage/bookings/${encodeURIComponent(ref)}/quotation/accept`, { method: "POST", token }),
+    /* Self-service changes (seat bookings) */
+    changeNames: (ref: string, token: string | undefined, passengers: { seat: string; fullName: string }[]) =>
+      request<BookingDetails>(`/manage/bookings/${encodeURIComponent(ref)}/passengers`, { method: "PATCH", token, body: { passengers } }),
+    changeSeats: (ref: string, token: string | undefined, moves: { from: string; to: string }[]) =>
+      request<BookingDetails>(`/manage/bookings/${encodeURIComponent(ref)}/seats`, { method: "POST", token, body: { moves } }),
+    dateChangeOptions: (ref: string, token: string | undefined, date: string) =>
+      request<{ rules: BookingChanges["rules"]["dateChange"]; trips: DateChangeOption[] }>(`/manage/bookings/${encodeURIComponent(ref)}/date-change/options`, {
+        token,
+        query: { date },
+      }),
+    startDateChange: (ref: string, token: string | undefined, tripId: string) =>
+      request<{ amendment: PendingDateChange; paymentRequired: boolean; booking: BookingDetails }>(`/manage/bookings/${encodeURIComponent(ref)}/date-change`, {
+        method: "POST",
+        token,
+        body: { tripId },
+      }),
+    payDateChange: (ref: string, token: string | undefined) =>
+      request<{ reference: string; authorizationUrl: string }>(`/manage/bookings/${encodeURIComponent(ref)}/date-change/pay`, { method: "POST", token }),
+    cancelDateChange: (ref: string, token: string | undefined) =>
+      request<BookingDetails>(`/manage/bookings/${encodeURIComponent(ref)}/date-change`, { method: "DELETE", token }),
     declineQuote: (ref: string, token: string | undefined, reason?: string) =>
       request<BookingDetails>(`/manage/bookings/${encodeURIComponent(ref)}/quotation/decline`, {
         method: "POST",

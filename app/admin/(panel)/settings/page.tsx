@@ -5,14 +5,14 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import { AdminPage, DataState, Panel, TabPanel, Tabs, useTabState } from "@/components/admin/ui";
 import CitiesManager from "@/components/admin/CitiesManager";
-import { Field, Input } from "@/components/ui/form";
+import { Field, Input, Select } from "@/components/ui/form";
 import { Alert } from "@/components/ui/feedback";
 import { DetailList } from "@/components/ui/layout";
 import { adminApi, useAdminData, type SettingsData } from "@/libs/admin";
 import { formatDateTime } from "@/libs/format";
 import type { ApiError } from "@/libs/api";
 
-type Editable = Pick<SettingsData, "booking" | "cancellation" | "hire" | "contact">;
+type Editable = Pick<SettingsData, "booking" | "cancellation" | "hire" | "amendments" | "contact">;
 
 export default function SettingsPage() {
   const can = useCan();
@@ -27,10 +27,17 @@ export default function SettingsPage() {
   const [tab, setTab] = useTabState(["general", "places"] as const, canGeneral ? "general" : "places");
 
   useEffect(() => {
-    if (data) setForm({ booking: { ...data.booking }, cancellation: { ...data.cancellation }, hire: { ...data.hire }, contact: { ...data.contact } });
+    if (data)
+      setForm({
+        booking: { ...data.booking },
+        cancellation: { ...data.cancellation },
+        hire: { ...data.hire },
+        amendments: { ...data.amendments },
+        contact: { ...data.contact },
+      });
   }, [data]);
 
-  const num = <S extends "booking" | "cancellation" | "hire">(section: S, key: keyof Editable[S]) => ({
+  const num = <S extends "booking" | "cancellation" | "hire" | "amendments">(section: S, key: keyof Editable[S]) => ({
     type: "number",
     value: String(form?.[section][key] ?? ""),
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => f && { ...f, [section]: { ...f[section], [key]: Number(e.target.value) } }),
@@ -45,7 +52,7 @@ export default function SettingsPage() {
     if (!form || !data) return;
     // Only send what changed, so the audit log shows exactly what was edited.
     const patch: Record<string, Record<string, unknown>> = {};
-    for (const section of ["booking", "cancellation", "hire", "contact"] as const) {
+    for (const section of ["booking", "cancellation", "hire", "amendments", "contact"] as const) {
       for (const [k, v] of Object.entries(form[section])) {
         if ((data[section] as Record<string, unknown>)[k] !== v) (patch[section] ??= {})[k] = v;
       }
@@ -111,6 +118,32 @@ export default function SettingsPage() {
                   </Field>
                   <Field label="Refund (%) inside the window" htmlFor="rp" hint="Outside it, no refund">
                     <Input id="rp" min={0} max={100} {...num("cancellation", "refundPercent")} />
+                  </Field>
+                </div>
+              </Panel>
+              <Panel title="Booking changes">
+                <p className="mb-3 text-[12.5px] text-gray-500">
+                  Customers change passenger names and seats themselves for free. Moving to a later trip on the same route costs:
+                </p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <Field label="Date change charge" htmlFor="am-mode" className="sm:col-span-3">
+                    <Select
+                      id="am-mode"
+                      value={form.amendments.dateChangeCharge}
+                      onValueChange={(v) => setForm((f) => f && { ...f, amendments: { ...f.amendments, dateChangeCharge: v as Editable["amendments"]["dateChangeCharge"] } })}
+                      options={[
+                        { value: "percentage", label: "A percentage of the original fare" },
+                        { value: "fare_difference", label: "The fare difference (free if the new trip costs the same or less)" },
+                      ]}
+                    />
+                  </Field>
+                  {form.amendments.dateChangeCharge === "percentage" && (
+                    <Field label="Charge (% of fare)" htmlFor="am-pct">
+                      <Input id="am-pct" min={0} max={100} {...num("amendments", "feePercent")} />
+                    </Field>
+                  )}
+                  <Field label="Closes (hours before departure)" htmlFor="am-cut" className="sm:col-span-2">
+                    <Input id="am-cut" min={0} max={168} {...num("amendments", "dateChangeCutoffHours")} />
                   </Field>
                 </div>
               </Panel>

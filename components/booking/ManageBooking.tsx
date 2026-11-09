@@ -1,5 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+import ChangeBooking from "./ChangeBooking";
+import BoardingPass from "./BoardingPass";
 import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
 import BookingView from "./BookingView";
@@ -238,11 +240,18 @@ export function ManagePanel({ reference, token, onExpired }: { reference: string
         {error && <Alert tone="error">{error}</Alert>}
         {notice && <Alert tone="success">{notice}</Alert>}
         <StatusNotice booking={b} inManage />
+        {/* On phones the pass comes first; on wide screens it heads the side column. */}
+        <div className="lg:hidden">
+          <BoardingPass booking={b} />
+        </div>
         <BookingView booking={b} />
         <Activity booking={b} />
       </div>
 
       <aside className="space-y-4">
+        <div className="hidden lg:block">
+          <BoardingPass booking={b} />
+        </div>
         {quote && payable && (
           <Card>
             <SectionTitle>Your quotation</SectionTitle>
@@ -294,8 +303,20 @@ export function ManagePanel({ reference, token, onExpired }: { reference: string
           </Card>
         )}
 
-        {active && <RequestChange reference={b.reference} token={token} onDone={async (msg) => { setNotice(msg); await load(); }} onError={handle} />}
-        {active && b.cancellation?.status !== "requested" && (
+        {active && (
+          <ChangeBooking
+            booking={b}
+            token={token}
+            onUpdated={(updated, msg) => {
+              setError(null);
+              setBooking(updated);
+              setNotice(msg);
+            }}
+            onError={handle}
+          />
+        )}
+        {active && <RequestChange reference={b.reference} token={token} selfService={!!b.changes} onDone={async (msg) => { setNotice(msg); await load(); }} onError={handle} />}
+        {active && b.cancellation?.status !== "requested" && !b.ticket?.checkedInAt && (
           <CancelBooking reference={b.reference} token={token} onDone={(updated, msg) => { setBooking(updated); setNotice(msg); }} onError={handle} />
         )}
       </aside>
@@ -303,7 +324,20 @@ export function ManagePanel({ reference, token, onExpired }: { reference: string
   );
 }
 
-function RequestChange({ reference, token, onDone, onError }: { reference: string; token?: string; onDone: (msg: string) => void; onError: (e: unknown) => void }) {
+function RequestChange({
+  reference,
+  token,
+  selfService,
+  onDone,
+  onError,
+}: {
+  reference: string;
+  token?: string;
+  /** Seat bookings change names, seats and dates themselves; this is for anything else. */
+  selfService?: boolean;
+  onDone: (msg: string) => void;
+  onError: (e: unknown) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -325,11 +359,15 @@ function RequestChange({ reference, token, onDone, onError }: { reference: strin
 
   return (
     <Card>
-      <SectionTitle>Need to change something?</SectionTitle>
+      <SectionTitle>{selfService ? "Something else?" : "Need to change something?"}</SectionTitle>
       {!open ? (
         <>
-          <p className="text-[13px] text-gray-500">Change of date, time, seat or passenger name — tell us and we&apos;ll sort it out.</p>
-          <Button fullWidth variant="secondary" className="mt-4" label="Request a change" onClick={() => setOpen(true)} />
+          <p className="text-[13px] text-gray-500">
+            {selfService
+              ? "For anything you can't change above, send our team a message."
+              : "Change of date, time or details. Tell us and we'll sort it out."}
+          </p>
+          <Button fullWidth variant="secondary" className="mt-4" label={selfService ? "Message our team" : "Request a change"} onClick={() => setOpen(true)} />
         </>
       ) : (
         <form onSubmit={submit} className="space-y-3">

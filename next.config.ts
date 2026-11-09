@@ -1,13 +1,9 @@
 import type { NextConfig } from "next";
 
 /**
- * The browser talks to the API through this app (same origin): `/api/*` is
- * forwarded to the Express backend. Session cookies are therefore first-party
- * wherever the two are hosted, and no CORS setup is needed. BACKEND_URL is a
- * server-side setting and never reaches the browser.
+ * The browser calls the API directly at NEXT_PUBLIC_API_URL (no proxy through this
+ * app, so API traffic doesn't count against the frontend host's bandwidth).
  */
-const BACKEND_URL = (process.env.BACKEND_URL ?? "http://localhost:4000").replace(/\/$/, "");
-
 const nextConfig: NextConfig = {
   images: {
     // Gallery images (Admin → Gallery) live on Cloudinary; SmartImage asks Cloudinary for resized copies.
@@ -29,10 +25,9 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: security },
       { source: "/admin/:path*", headers: privatePages },
       { source: "/account/:path*", headers: privatePages },
+      // The ticket scanner needs the camera (this page only; overrides the rule above).
+      { source: "/admin/scan", headers: [{ key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=(), payment=()" }] },
     ];
-  },
-  async rewrites() {
-    return [{ source: "/api/:path*", destination: `${BACKEND_URL}/api/:path*` }];
   },
 };
 

@@ -39,8 +39,9 @@ export default function HireForm({ kind }: { kind: Kind }) {
     destination: "",
     pickupDate: todayInLagos(kind === "bus" ? 2 : 1),
     pickupTime: "08:00",
-    durationDays: 1,
-    passengerCount: kind === "bus" ? 14 : 1,
+    // Kept as typed so the fields can be cleared and retyped; parsed below.
+    durationDays: "1",
+    passengerCount: kind === "bus" ? "14" : "1",
     tripType: "one_way" as "one_way" | "return",
     returnDate: todayInLagos(kind === "bus" ? 2 : 1),
     returnTime: "18:00",
@@ -74,20 +75,23 @@ export default function HireForm({ kind }: { kind: Kind }) {
 
   const category = categories?.find((c) => c.id === form.categoryId);
   const pickupAt = lagosDateTime(form.pickupDate, form.pickupTime);
+  const days = /^\d+$/.test(form.durationDays) ? Number(form.durationDays) : 0;
+  const pax = /^\d+$/.test(form.passengerCount) ? Number(form.passengerCount) : 0;
+  const daysValid = days >= 1 && days <= 30;
 
   // Live availability and price for the selected vehicle and dates.
   useEffect(() => {
-    if (!form.categoryId || !form.pickupDate || !form.pickupTime || form.durationDays < 1) return;
+    if (!form.categoryId || !form.pickupDate || !form.pickupTime || !daysValid) return;
     const t = setTimeout(() => {
       setChecking(true);
       api
-        .hireAvailability({ categoryId: form.categoryId, kind, pickupAt, durationDays: form.durationDays })
+        .hireAvailability({ categoryId: form.categoryId, kind, pickupAt, durationDays: days })
         .then(setAvailability)
         .catch(() => setAvailability(null))
         .finally(() => setChecking(false));
     }, 300);
     return () => clearTimeout(t);
-  }, [form.categoryId, form.pickupDate, form.pickupTime, form.durationDays, kind, pickupAt]);
+  }, [form.categoryId, form.pickupDate, form.pickupTime, days, daysValid, kind, pickupAt]);
 
   if (loadError) return <Alert tone="error">{loadError}</Alert>;
   if (!categories) return <LoadingBlock label="Loading vehicles…" />;
@@ -101,7 +105,9 @@ export default function HireForm({ kind }: { kind: Kind }) {
     const e: Record<string, string> = {};
     if (form.pickupLocation.trim().length < 3) e.pickupLocation = "Enter the pickup address";
     if (form.destination.trim().length < 3) e.destination = "Tell us where you're going";
-    if (category && form.passengerCount > category.capacity) e.passengerCount = `${category.name} carries up to ${category.capacity} passengers`;
+    if (!daysValid) e.durationDays = "Enter 1 to 30 days";
+    if (pax < 1 || pax > 100) e.passengerCount = "Enter the number of passengers";
+    else if (category && pax > category.capacity) e.passengerCount = `${category.name} carries up to ${category.capacity} passengers`;
     if (kind === "bus" && form.tripType === "return" && lagosDateTime(form.returnDate, form.returnTime) <= pickupAt) {
       e.returnAt = "Return must be after pickup";
     }
@@ -123,8 +129,8 @@ export default function HireForm({ kind }: { kind: Kind }) {
       pickupLocation: form.pickupLocation.trim(),
       destination: form.destination.trim(),
       pickupAt,
-      durationDays: form.durationDays,
-      passengerCount: form.passengerCount,
+      durationDays: days,
+      passengerCount: pax,
       notes: form.notes.trim() || undefined,
       contact,
       ...(kind === "bus" && {
@@ -208,11 +214,11 @@ export default function HireForm({ kind }: { kind: Kind }) {
             <Field label="Pickup time" htmlFor="ptime">
               <Input id="ptime" type="time" value={form.pickupTime} onChange={(e) => set("pickupTime", e.target.value)} />
             </Field>
-            <Field label="Duration (days)" htmlFor="days">
-              <Input id="days" type="number" min={1} max={30} value={form.durationDays} onChange={(e) => set("durationDays", Math.max(1, Number(e.target.value) || 1))} />
+            <Field label="Duration (days)" htmlFor="days" error={errors.durationDays}>
+              <Input id="days" type="number" min={1} max={30} inputMode="numeric" value={form.durationDays} onChange={(e) => set("durationDays", e.target.value)} invalid={!!errors.durationDays} />
             </Field>
             <Field label="Passengers" htmlFor="passengers" error={errors.passengerCount}>
-              <Input id="passengers" type="number" min={1} max={100} value={form.passengerCount} onChange={(e) => set("passengerCount", Math.max(1, Number(e.target.value) || 1))} invalid={!!errors.passengerCount} />
+              <Input id="passengers" type="number" min={1} max={100} inputMode="numeric" value={form.passengerCount} onChange={(e) => set("passengerCount", e.target.value)} invalid={!!errors.passengerCount} />
             </Field>
 
             {kind === "bus" && (
@@ -254,11 +260,11 @@ export default function HireForm({ kind }: { kind: Kind }) {
           <DetailList
             rows={[
               ["Vehicle", category?.name ?? "—"],
-              ["Duration", `${form.durationDays} day${form.durationDays > 1 ? "s" : ""}`],
-              ["Passengers", String(form.passengerCount)],
+              ["Duration", daysValid ? `${days} day${days > 1 ? "s" : ""}` : "—"],
+              ["Passengers", pax > 0 ? String(pax) : "—"],
               [
                 "Price",
-                instant ? (checking ? "Checking…" : naira(availability?.estimatedAmountKobo ?? (category?.dailyRateKobo ?? 0) * form.durationDays)) : "By quotation",
+                instant ? (checking ? "Checking…" : naira(availability?.estimatedAmountKobo ?? (category?.dailyRateKobo ?? 0) * (daysValid ? days : 0))) : "By quotation",
               ],
             ]}
           />

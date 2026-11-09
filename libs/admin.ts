@@ -4,7 +4,7 @@ import { ApiError, request } from "./api";
 import type { BookingStatus, BookingType, PaymentStatus } from "./types";
 
 /**
- * Admin API client. Calls go to the same-origin /api/v1/admin/* with the admin
+ * Admin API client. Calls go to the API's /api/v1/admin/* with the admin
  * session cookie. Authorization is enforced by the backend on every call; the
  * frontend only reacts to 401 (send to sign-in) and 403 (show "no access").
  */
@@ -77,6 +77,7 @@ export type Permission =
   | "bookings.view"
   | "bookings.edit"
   | "bookings.cancel"
+  | "bookings.checkin"
   | "hire.manage"
   | "payments.view"
   | "payments.refund"
@@ -299,6 +300,7 @@ export interface SettingsData {
   booking: { seatHoldMinutes: number; bookingCutoffMinutes: number; quoteValidityHours: number };
   cancellation: { refundWindowHours: number; refundPercent: number };
   hire: { carMinLeadHours: number; busMinLeadHours: number };
+  amendments: { dateChangeCharge: "percentage" | "fare_difference"; feePercent: number; dateChangeCutoffHours: number };
   contact: { supportEmail: string; supportPhone: string; adminNotificationEmail: string };
   updatedAt?: string;
   payments: { provider: string; mode: "live" | "test" | "not_configured"; webhookPath: string };
@@ -371,4 +373,14 @@ export interface ContinuityProblem {
   message: string;
   expectedCity: string;
   actualCity: string;
+}
+
+/** Result of scanning a boarding pass (or typing a reference) at Admin → Scan tickets. */
+export interface TicketScan {
+  /** False when the reference was typed by hand rather than read from a QR code. */
+  signed: boolean;
+  verdict: { state: "valid" | "warning" | "invalid"; title: string; detail: string };
+  canCheckIn: boolean;
+  checkIn: { at: string; byName: string | null } | null;
+  booking: import("./types").BookingDetails;
 }

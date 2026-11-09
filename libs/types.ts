@@ -115,6 +115,13 @@ export interface BookingSummary {
   };
 }
 
+export interface BookingTicket {
+  code: string;
+  /** QR image on the API (SVG); swap the extension for a PNG. */
+  qrUrl: string;
+  checkedInAt: string | null;
+}
+
 export interface BookingDetails extends BookingSummary {
   nextOfKin?: { fullName: string; phone: string } | null;
   modificationRequests: {
@@ -126,7 +133,12 @@ export interface BookingDetails extends BookingSummary {
     resolutionNote: string | null;
   }[];
   statusHistory: { status: BookingStatus; at: string; by: string; note?: string }[];
+  /** Seat bookings: what the customer can change themselves, and any date change awaiting payment. */
+  changes: BookingChanges | null;
+  /** Boarding pass (QR) while the booking is confirmed. */
+  ticket?: BookingTicket | null;
   payments: {
+    purpose?: "booking" | "amendment";
     reference: string;
     amountKobo: number;
     status: "initialized" | "pending" | "success" | "failed";
@@ -134,6 +146,39 @@ export interface BookingDetails extends BookingSummary {
     paidAt: string | null;
     refunds: { amountKobo: number; status: string; requestedAt: string; processedAt: string | null }[];
   }[];
+}
+
+export interface ChangeRule {
+  allowed: boolean;
+  reason: string | null;
+}
+
+export interface PendingDateChange {
+  id: string;
+  status: "awaiting_payment" | "completed" | "expired" | "cancelled" | "failed";
+  toTripId: string;
+  toDepartureAt: string;
+  seats: string[];
+  feeKobo: number;
+  chargeMode: "percentage" | "fare_difference";
+  feePercent: number | null;
+  holdExpiresAt: string;
+}
+
+export interface BookingChanges {
+  rules: {
+    names: ChangeRule;
+    seats: ChangeRule;
+    dateChange: ChangeRule & { closesAt: string; chargeMode: "percentage" | "fare_difference"; feePercent: number };
+  };
+  pending: PendingDateChange | null;
+}
+
+/** A later departure the booking can move to, with what the move costs. */
+export interface DateChangeOption extends TripSummary {
+  feeKobo: number;
+  chargeMode: "percentage" | "fare_difference";
+  feePercent: number | null;
 }
 
 export interface CancellationQuote {
@@ -144,6 +189,6 @@ export interface CancellationQuote {
 }
 
 export interface PaymentStatusView {
-  payment: { reference: string; status: "initialized" | "pending" | "success" | "failed"; amountKobo: number; paidAt: string | null };
+  payment: { reference: string; status: "initialized" | "pending" | "success" | "failed"; amountKobo: number; paidAt: string | null; purpose?: "booking" | "amendment"; refunding?: boolean };
   booking: { reference: string; type: BookingType; status: BookingStatus; paymentStatus: PaymentStatus } | null;
 }

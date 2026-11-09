@@ -14,9 +14,8 @@ const TABS = [
 ];
 
 /**
- * Customer area chrome. proxy.ts redirects visitors with no session cookie;
- * this confirms the session with the backend (an expired cookie also lands on
- * sign-in). Data calls are authorised by the backend on every request.
+ * Customer area chrome. Confirms the session with the backend and sends anyone
+ * signed out (or with an expired session) to sign-in. Data calls are authorised by the backend on every request.
  */
 export default function AccountShell({ children }: { children: React.ReactNode }) {
   const { user, loading } = useCustomer();
@@ -24,7 +23,7 @@ export default function AccountShell({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user) router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+    if (!loading && !user) router.replace(`/login?next=${encodeURIComponent(location.pathname + location.search)}`);
   }, [loading, user, router, pathname]);
 
   if (loading || !user) return <LoadingBlock label="Loading your account…" />;

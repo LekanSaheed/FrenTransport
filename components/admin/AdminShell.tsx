@@ -16,6 +16,7 @@ import {
   People,
   Receipt2,
   Routing,
+  ScanBarcode,
   Setting2,
   ShieldTick,
   Ticket,
@@ -30,6 +31,7 @@ const NAV: { href: string; label: string; icon: typeof Element3; perms: Permissi
   { href: "/admin", label: "Overview", icon: Element3, perms: ["overview.view"] },
   { href: "/admin/bookings", label: "Bookings", icon: Ticket, perms: ["bookings.view"] },
   { href: "/admin/hire-requests", label: "Hire requests", icon: Car, perms: ["bookings.view"] },
+  { href: "/admin/scan", label: "Scan tickets", icon: ScanBarcode, perms: ["bookings.view"] },
   { href: "/admin/trips", label: "Trips", icon: Routing, perms: ["trips.view"] },
   { href: "/admin/timetables", label: "Timetables", icon: Calendar, perms: ["trips.view"] },
   { href: "/admin/vehicles", label: "Vehicles", icon: Bus, perms: ["fleet.view"] },
@@ -50,9 +52,8 @@ const ROLE_LABEL: Record<AdminUser["staffRole"], string> = { owner: "Owner", ope
  */
 
 /**
- * Admin chrome + session check. proxy.ts already redirects visitors without a
- * cookie; this confirms the session with the backend (role included) before
- * showing anything, and the backend re-checks on every API call.
+ * Admin chrome + session check. Confirms the session with the backend (role
+ * included) before showing anything, sending anyone signed out to sign-in, and the backend re-checks on every API call.
  */
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -62,13 +63,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    // Keep the query string (e.g. a scanned ticket's ?code=) through sign-in.
+    const toLogin = () => router.replace(`/admin/login?next=${encodeURIComponent(location.pathname + location.search)}`);
     adminApi
       .me()
       .then(({ user }) => {
-        if (!user) router.replace(`/admin/login?next=${encodeURIComponent(pathname)}`);
+        if (!user) toLogin();
         else setUser(user);
       })
-      .catch(() => router.replace(`/admin/login?next=${encodeURIComponent(pathname)}`))
+      .catch(toLogin)
       .finally(() => setChecked(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

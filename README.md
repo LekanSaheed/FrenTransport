@@ -5,7 +5,7 @@ Next.js 16 (App Router) + Tailwind v4. Talks to the API in `../Backend`.
 ## Running locally
 
 ```bash
-cp .env.example .env.local   # BACKEND_URL=http://localhost:4000
+cp .env.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
 npm install
 npm run dev                  # http://localhost:3000  (admin: /admin)
 ```
@@ -16,21 +16,24 @@ only on the backend.
 
 ## How the frontend reaches the API
 
-The browser only ever calls this app: `/api/*` is forwarded to the Express backend by a
-rewrite in `next.config.ts` (`BACKEND_URL`). Session cookies are therefore first-party on
-any hosting setup, and no CORS configuration is needed.
+The browser calls the API **directly** at `NEXT_PUBLIC_API_URL` (`libs/api.ts`, with
+`credentials: "include"`). Nothing is proxied through this app, so API traffic doesn't count
+against the frontend host's bandwidth or function/middleware quotas.
 
-`proxy.ts` (Next 16's replacement for `middleware.ts`) runs before every `/api`, `/admin`
-and `/account` request:
-- it forwards the customer's real IP to the backend in `x-obere-client-ip`, signed with
-  `API_PROXY_SECRET` (same value on both sides), and strips any copy the browser sent —
-  without this every customer would share one rate-limit bucket;
-- it redirects visitors without a session cookie away from `/admin/*` and `/account/*`.
-  That is only a convenience: the backend checks the session **and role** on every call.
+- **CORS and CSRF:** the API accepts only `FRONTEND_URL` as an origin (with credentials), and
+  refuses signed-in changes from any other origin.
+- **Sign-in cookies** belong to the API. Put the API on a subdomain of the site
+  (`api.obere.ng` for `www.obere.ng`): the two are then the same site, so the cookies are
+  first-party and work in every browser with `COOKIE_SAMESITE=lax`. On an unrelated domain
+  (the `*.onrender.com` test API) set `COOKIE_SAMESITE=none`: the cookies become third-party,
+  marked `Partitioned` so Chrome and Firefox keep them; Safari (and all iPhone browsers) may not.
+- **Page guards:** `/admin` and `/account` check the session with the API when they load
+  (`AdminShell`, `AccountShell`) and send signed-out visitors to sign-in, keeping the address.
+  The API checks the session **and role** on every call regardless.
+- **Client IP** for rate limits comes from the API host's own proxy (`TRUST_PROXY` on the API).
 
-**Deploying:** set `BACKEND_URL` at **build time** (rewrite destinations are baked into
-the build) and `API_PROXY_SECRET` at runtime. On Vercel/Render the platform supplies
-`X-Forwarded-For`; behind your own Nginx, make sure it sets it.
+**Deploying:** set `NEXT_PUBLIC_API_URL` (e.g. `https://api.obere.ng/api/v1`) at **build time**;
+it is compiled into the browser code, so rebuild after changing it.
 
 ## Layout
 
@@ -67,7 +70,7 @@ Uploads use `useMediaUpload()` / `uploadImage()` in `libs/media.ts` (sign → up
 | `/hire/car` | Car hire — instant price per day, then payment |
 | `/hire/bus` | Bus hire — request a quotation |
 | `/booking-status` | Status by reference + email |
-| `/manage` | Verify by emailed code (or email link), then pay, accept/decline a quote, cancel or request a change |
+| `/manage` | Verify by emailed code (or email link), then see the QR boarding pass once confirmed (`components/booking/BoardingPass.tsx`), pay, accept/decline a quote, cancel, change passenger names, seats or travel date (`components/booking/ChangeBooking.tsx`; a date change charge goes through Paystack and returns to `/payment/callback`), or message the team |
 
 ## Customer accounts
 
@@ -95,6 +98,7 @@ page reads them.
 | Overview | Live totals, revenue (gross/refunded/net), pending payments, next 24 h, 30-day charts, recent bookings and activity |
 | Bookings | Search/filter all bookings; detail page with quotes, payments, change requests, activity, and actions (quote, reject, record offline payment with evidence, manual refund, edit with reason, cancel, decide cancellation requests) |
 | Hire requests | Car and bus requests, defaulting to those awaiting a quote |
+| Scan tickets | Scan a boarding-pass QR with the device camera (`components/admin/QrScanner.tsx`: the browser's QR reader, or jsQR where there isn't one), or type a reference; shows the booking with a valid / wrong day / already used verdict, and checks passengers in. The phone's own camera app works too: the QR link opens this page. The camera is allowed on this page only (`next.config.ts`) and needs https (or localhost) |
 | Timetables | Repeating plans per vehicle with a live check (each trip starts where the last ended, turnaround, loop closes); pause/resume/delete; Schedule issues tab (location conflicts, timetable gaps, routes without departures) |
 | Trips | Upcoming / departed / cancelled views; one-off scheduling (route, vehicle, dates, times, fare; skipped slots explained); trip page with seat map (block/release seats), passenger manifest, reschedule/change vehicle/fare, cancel (refunds everyone) or delete (only if never booked) |
 | Vehicles | Fleet (add/edit, status, notes, upcoming trips) and vehicle types (image picked from the gallery, hire pricing, visual seat-layout builder with templates, Duplicate to change a locked layout) |
