@@ -5,7 +5,7 @@ Next.js 16 (App Router) + Tailwind v4. Talks to the API in `../Backend`.
 ## Running locally
 
 ```bash
-cp .env.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
+cp .env.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:4000
 npm install
 npm run dev                  # http://localhost:3000  (admin: /admin)
 ```
@@ -16,8 +16,9 @@ only on the backend.
 
 ## How the frontend reaches the API
 
-The browser calls the API **directly** at `NEXT_PUBLIC_API_URL` (`libs/api.ts`, with
-`credentials: "include"`). Nothing is proxied through this app, so API traffic doesn't count
+The browser calls the API **directly** at `NEXT_PUBLIC_API_URL` (`credentials: "include"`).
+The base URL is set once in `libs/config.ts` (the address plus `/api/v1`); endpoints in
+`libs/api.ts`, `libs/admin.ts` and `libs/customer.ts` pass only their path to `request()`. Nothing is proxied through this app, so API traffic doesn't count
 against the frontend host's bandwidth or function/middleware quotas.
 
 - **CORS and CSRF:** the API accepts only `FRONTEND_URL` as an origin (with credentials), and
@@ -32,8 +33,9 @@ against the frontend host's bandwidth or function/middleware quotas.
   The API checks the session **and role** on every call regardless.
 - **Client IP** for rate limits comes from the API host's own proxy (`TRUST_PROXY` on the API).
 
-**Deploying:** set `NEXT_PUBLIC_API_URL` (e.g. `https://api.obere.ng/api/v1`) at **build time**;
-it is compiled into the browser code, so rebuild after changing it.
+**Deploying:** set `NEXT_PUBLIC_API_URL` to the API's address (e.g. `https://api.obere.ng`) at
+**build time**; it is compiled into the browser code, so rebuild after changing it. A production
+build fails if it's missing.
 
 ## Layout
 

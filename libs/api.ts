@@ -1,3 +1,4 @@
+import { apiUrl } from "./config";
 import type { BookingDetails, BookingSummary, CancellationQuote, HireAvailability, HireCategory, Location, PaymentStatusView, TripDetails, TripSummary, BookingChanges, DateChangeOption, PendingDateChange } from "./types";
 
 /**
@@ -5,11 +6,6 @@ import type { BookingDetails, BookingSummary, CancellationQuote, HireAvailabilit
  * `{ success: true, data }` or `{ success: false, error: { code, message, details } }`.
  * No secrets live here: payment and email keys stay on the backend.
  */
-/**
- * The browser calls the API directly (no proxy through this app), e.g. https://api.obere.ng/api/v1.
- * Session cookies are the API's own, sent with `credentials: "include"`.
- */
-const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1").replace(/\/$/, "");
 
 export class ApiError extends Error {
   constructor(
@@ -38,7 +34,7 @@ export interface RequestOptions {
 }
 
 export async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
-  const url = new URL(BASE_URL + path);
+  const url = apiUrl(path); // base URL added here, once, for every endpoint
   for (const [k, v] of Object.entries(opts.query ?? {})) if (v !== undefined && v !== "") url.searchParams.set(k, String(v));
 
   const headers: Record<string, string> = { Accept: "application/json" };

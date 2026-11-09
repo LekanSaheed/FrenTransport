@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 
 /**
  * The browser calls the API directly at NEXT_PUBLIC_API_URL (no proxy through this
@@ -31,4 +32,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// A production build without the API address would ship a site that calls localhost.
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_PRODUCTION_BUILD && !process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not set. Set it to the API's base URL, e.g. https://api.obere.ng, and build again.");
+  }
+  return nextConfig;
+}
