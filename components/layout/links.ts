@@ -13,6 +13,7 @@ export const footerLinks = [
     title: "Travel",
     items: [
       { label: "Book a seat", path: "/book" },
+      { label: "Bus routes", path: "/routes" },
       { label: "Hire a car", path: "/hire/car" },
       { label: "Hire a bus", path: "/hire/bus" },
     ],

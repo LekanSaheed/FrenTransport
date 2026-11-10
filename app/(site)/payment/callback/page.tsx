@@ -2,8 +2,9 @@ import { Suspense } from "react";
 import Container from "@/components/layout/Container";
 import { LoadingBlock } from "@/components/ui/feedback";
 import PaymentResult from "@/components/booking/PaymentResult";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Payment | Obere Transport" };
+export const metadata = pageMetadata({ title: "Payment", path: "/payment/callback", noindex: true });
 
 export default function PaymentCallbackPage() {
   return (

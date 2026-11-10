@@ -2,8 +2,9 @@ import React from "react";
 import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import ReadyToBoard from "@/components/landing-page/ReadyToBoard";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "About us | Obere Transport" };
+export const metadata = pageMetadata({ title: "About us", path: "/about", description: "Obere Transport connects cities across Nigeria with safe, comfortable intercity buses, professional drivers and easy online booking." });
 
 const VALUES = [
   { title: "Safety first", text: "Trained, professional drivers and well-maintained vehicles on every trip." },

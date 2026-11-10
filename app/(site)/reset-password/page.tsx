@@ -4,7 +4,7 @@ import Container from "@/components/layout/Container";
 import { LoadingBlock } from "@/components/ui/feedback";
 import { ResetPasswordForm } from "@/components/account/AuthForms";
 
-export const metadata: Metadata = { title: "Choose a new password | Obere Transport", robots: { index: false } };
+export const metadata: Metadata = { title: "Choose a new password", robots: { index: false } };
 
 export default function Page() {
   return (

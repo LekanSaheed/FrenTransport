@@ -1,8 +1,9 @@
 import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import HireForm from "@/components/booking/HireForm";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Hire a car | Obere Transport" };
+export const metadata = pageMetadata({ title: "Hire a car", path: "/hire/car", description: "Hire a car with a driver by the day in Nigeria. See the price instantly, book online and pay securely." });
 
 export default function HireCarPage() {
   return (

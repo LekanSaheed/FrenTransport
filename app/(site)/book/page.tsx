@@ -3,8 +3,9 @@ import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import { LoadingBlock } from "@/components/ui/feedback";
 import TripSearch from "@/components/booking/TripSearch";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Book a seat | Obere Transport" };
+export const metadata = pageMetadata({ title: "Book a bus seat", path: "/book", description: "Search intercity bus trips across Nigeria, compare departure times and fares, pick your seat and pay online in minutes." });
 
 export default function BookPage() {
   return (

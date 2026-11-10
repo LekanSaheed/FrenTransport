@@ -1,26 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api, type PublicConfig } from "./api";
-import type { Location } from "./types";
 
 /*
- * Public data used by the site chrome (footer, contact page, homepage).
+ * Public data used by the site chrome (footer, contact page).
  * Fetched once per page load and shared between components.
  */
 let configPromise: Promise<PublicConfig | null> | null = null;
-let citiesPromise: Promise<string[]> | null = null;
 
 function loadConfig() {
   configPromise ??= api.config().catch(() => null);
   return configPromise;
-}
-
-function loadCities() {
-  citiesPromise ??= api
-    .locations()
-    .then((ls: Location[]) => [...new Set(ls.map((l) => l.city))].sort())
-    .catch(() => []);
-  return citiesPromise;
 }
 
 /** Support contacts from Admin → Settings (null while loading or if unavailable). */
@@ -34,19 +24,6 @@ export function useSupportContact() {
     };
   }, []);
   return contact;
-}
-
-/** Cities with at least one active terminal. */
-export function useCities() {
-  const [cities, setCities] = useState<string[] | null>(null);
-  useEffect(() => {
-    let live = true;
-    loadCities().then((c) => live && setCities(c));
-    return () => {
-      live = false;
-    };
-  }, []);
-  return cities;
 }
 
 /** "08031234567" → "+2348031234567" for tel: and WhatsApp links. */

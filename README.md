@@ -66,13 +66,32 @@ Uploads use `useMediaUpload()` / `uploadImage()` in `libs/media.ts` (sign → up
 
 | Route | Purpose |
 |---|---|
-| `/book` | Search trips by route, date and passengers |
+| `/routes`, `/routes/[slug]` | Route pages for search engines: every route, and one page per city pair (`/routes/lagos-to-abuja`) with journey time, departure times, fares, terminals and FAQs. Server-rendered from the API and cached for an hour |
+| `/book` | Search trips by route, date and passengers (from a route page, it searches tomorrow straight away) |
 | `/book/[tripId]` | Seat map → passenger & contact details → review → Paystack |
 | `/payment/callback` | Paystack returns here; the backend verifies the payment before anything is confirmed |
 | `/hire/car` | Car hire — instant price per day, then payment |
 | `/hire/bus` | Bus hire — request a quotation |
 | `/booking-status` | Status by reference + email |
 | `/manage` | Verify by emailed code (or email link), then see the QR boarding pass once confirmed (`components/booking/BoardingPass.tsx`), pay, accept/decline a quote, cancel, change passenger names, seats or travel date (`components/booking/ChangeBooking.tsx`; a date change charge goes through Paystack and returns to `/payment/callback`), or message the team |
+
+## SEO
+
+- **Metadata:** `libs/seo.ts` → `pageMetadata({ title, description, path, noindex })` gives every
+  public page a title (`… | Obere Transport`), description, canonical URL and share preview.
+  Personal pages (checkout, payment result, sign-in, account, admin) are `noindex`.
+- **Route pages** (`/routes/...`, see above) target searches like "Lagos to Owerri bus". The
+  homepage's destinations section is server-rendered and links to them.
+- **Structured data (JSON-LD):** Organization + WebSite on the homepage; BreadcrumbList,
+  BusTrip (with the lowest fare) and FAQPage on route pages; ItemList on `/routes`.
+- **Files:** `app/robots.ts` (`/robots.txt`), `app/sitemap.ts` (`/sitemap.xml`, including every
+  route page, refreshed hourly), `app/manifest.ts`, and generated share images
+  (`app/opengraph-image.tsx`; per route in `app/(site)/routes/[slug]/opengraph-image.tsx`).
+- **Only production is indexed:** on Vercel, when `VERCEL_ENV=production`; on another host,
+  set `ALLOW_INDEXING=1`. Previews and test copies send `Disallow: /` and `noindex`.
+- **`NEXT_PUBLIC_SITE_URL`:** the site's public address (default `https://www.obere.ng`), used
+  for canonical links, the sitemap and share images. Use the address the site ends on.
+- After launch, add the site to Google Search Console and submit `/sitemap.xml`.
 
 ## Customer accounts
 

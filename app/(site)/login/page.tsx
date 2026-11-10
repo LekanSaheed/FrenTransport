@@ -4,7 +4,7 @@ import Container from "@/components/layout/Container";
 import { LoadingBlock } from "@/components/ui/feedback";
 import { LoginForm } from "@/components/account/AuthForms";
 
-export const metadata: Metadata = { title: "Sign in | Obere Transport", robots: { index: false } };
+export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 
 export default function Page() {
   return (

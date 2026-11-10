@@ -4,7 +4,7 @@ import Container from "@/components/layout/Container";
 import { LoadingBlock } from "@/components/ui/feedback";
 import { RegisterForm } from "@/components/account/AuthForms";
 
-export const metadata: Metadata = { title: "Create an account | Obere Transport", robots: { index: false } };
+export const metadata: Metadata = { title: "Create an account", robots: { index: false } };
 
 export default function Page() {
   return (

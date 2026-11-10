@@ -4,8 +4,9 @@ import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import { LoadingBlock } from "@/components/ui/feedback";
 import SeatCheckout from "@/components/booking/SeatCheckout";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Checkout | Obere Transport" };
+export const metadata = pageMetadata({ title: "Checkout", path: "/book", noindex: true });
 
 export default async function TripCheckoutPage({ params }: { params: Promise<{ tripId: string }> }) {
   const { tripId } = await params;

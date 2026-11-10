@@ -3,8 +3,9 @@ import Link from "next/link";
 import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import ContactCards from "@/components/layout/ContactCards";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Contact us | Obere Transport" };
+export const metadata = pageMetadata({ title: "Contact us", path: "/contact", description: "Get in touch with Obere Transport by phone or email for bookings, hire requests and help with your trip." });
 
 const Contact = () => {
   return (

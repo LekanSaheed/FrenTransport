@@ -54,7 +54,13 @@ export default function TripSearch() {
   }, [form.from]);
 
   // Search whenever the URL holds a complete query (also restores results on back navigation).
-  const query = { from: params.get("from"), to: params.get("to"), date: params.get("date"), pax: Number(params.get("pax") ?? 1) };
+  // Route pages link with just from/to: search tomorrow (the form's default date) straight away.
+  const query = {
+    from: params.get("from"),
+    to: params.get("to"),
+    date: params.get("date") ?? (params.get("from") && params.get("to") ? todayInLagos(1) : null),
+    pax: Number(params.get("pax") ?? 1),
+  };
   useEffect(() => {
     if (!query.from || !query.to || !query.date) return;
     setLoading(true);

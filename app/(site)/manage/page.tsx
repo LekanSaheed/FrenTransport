@@ -3,8 +3,9 @@ import Container from "@/components/layout/Container";
 import { PageHeader } from "@/components/ui/layout";
 import { LoadingBlock } from "@/components/ui/feedback";
 import ManageBooking from "@/components/booking/ManageBooking";
+import { pageMetadata } from "@/libs/seo";
 
-export const metadata = { title: "Manage booking | Obere Transport" };
+export const metadata = pageMetadata({ title: "Manage your booking", path: "/manage", description: "Change passenger names, seats or your travel date, pay, or cancel your Obere Transport booking online." });
 
 export default function ManagePage() {
   return (

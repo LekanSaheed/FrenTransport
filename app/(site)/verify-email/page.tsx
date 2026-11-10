@@ -4,7 +4,7 @@ import Container from "@/components/layout/Container";
 import { LoadingBlock } from "@/components/ui/feedback";
 import { VerifyEmail } from "@/components/account/AuthForms";
 
-export const metadata: Metadata = { title: "Confirm your email | Obere Transport", robots: { index: false } };
+export const metadata: Metadata = { title: "Confirm your email", robots: { index: false } };
 
 export default function Page() {
   return (

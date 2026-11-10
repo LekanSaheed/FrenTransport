@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import AcceptInvite from "@/components/admin/AcceptInvite";
 
-export const metadata: Metadata = { title: "Join the admin team | Obere Transport", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Join the admin team", robots: { index: false, follow: false } };
 
 export default function AcceptInvitePage() {
   return (
