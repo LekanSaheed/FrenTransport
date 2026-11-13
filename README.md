@@ -68,7 +68,7 @@ Uploads use `useMediaUpload()` / `uploadImage()` in `libs/media.ts` (sign → up
 |---|---|
 | `/routes`, `/routes/[slug]` | Route pages for search engines: every route, and one page per city pair (`/routes/lagos-to-abuja`) with journey time, departure times, fares, terminals and FAQs. Server-rendered from the API and cached for an hour |
 | `/book` | Search trips by route, date and passengers (from a route page, it searches tomorrow straight away) |
-| `/book/[tripId]` | Seat map → passenger & contact details → review → Paystack |
+| `/book/[tripId]` | Seat map → passenger & contact details → review (with baggage: the free allowance, then a notice that extra bags are paid at the terminal, or an extra-bag picker that adds to the total; `components/booking/BaggagePicker.tsx`) → Paystack |
 | `/payment/callback` | Paystack returns here; the backend verifies the payment before anything is confirmed |
 | `/hire/car` | Car hire — instant price per day, then payment |
 | `/hire/bus` | Bus hire — request a quotation |

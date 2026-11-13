@@ -12,7 +12,7 @@ import { adminApi, useAdminData, type SettingsData } from "@/libs/admin";
 import { formatDateTime } from "@/libs/format";
 import type { ApiError } from "@/libs/api";
 
-type Editable = Pick<SettingsData, "booking" | "cancellation" | "hire" | "amendments" | "contact">;
+type Editable = Pick<SettingsData, "booking" | "cancellation" | "hire" | "amendments" | "baggage" | "contact">;
 
 export default function SettingsPage() {
   const can = useCan();
@@ -33,15 +33,24 @@ export default function SettingsPage() {
         cancellation: { ...data.cancellation },
         hire: { ...data.hire },
         amendments: { ...data.amendments },
+        baggage: { ...data.baggage },
         contact: { ...data.contact },
       });
   }, [data]);
 
-  const num = <S extends "booking" | "cancellation" | "hire" | "amendments">(section: S, key: keyof Editable[S]) => ({
+  const num = <S extends "booking" | "cancellation" | "hire" | "amendments" | "baggage">(section: S, key: keyof Editable[S]) => ({
     type: "number",
     value: String(form?.[section][key] ?? ""),
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => f && { ...f, [section]: { ...f[section], [key]: Number(e.target.value) } }),
   });
+  // Money is stored in kobo; admins type naira.
+  const naira = (key: "extraBagMinKobo" | "extraBagFlatKobo") => ({
+    type: "number",
+    value: form ? String(form.baggage[key] / 100) : "",
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      setForm((f) => f && { ...f, baggage: { ...f.baggage, [key]: Math.round(Number(e.target.value) * 100) } }),
+  });
+  const setBaggage = (patch: Partial<Editable["baggage"]>) => setForm((f) => f && { ...f, baggage: { ...f.baggage, ...patch } });
   const text = (key: keyof Editable["contact"]) => ({
     value: form?.contact[key] ?? "",
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => f && { ...f, contact: { ...f.contact, [key]: e.target.value } }),
@@ -52,7 +61,7 @@ export default function SettingsPage() {
     if (!form || !data) return;
     // Only send what changed, so the audit log shows exactly what was edited.
     const patch: Record<string, Record<string, unknown>> = {};
-    for (const section of ["booking", "cancellation", "hire", "amendments", "contact"] as const) {
+    for (const section of ["booking", "cancellation", "hire", "amendments", "baggage", "contact"] as const) {
       for (const [k, v] of Object.entries(form[section])) {
         if ((data[section] as Record<string, unknown>)[k] !== v) (patch[section] ??= {})[k] = v;
       }
@@ -145,6 +154,71 @@ export default function SettingsPage() {
                   <Field label="Closes (hours before departure)" htmlFor="am-cut" className="sm:col-span-2">
                     <Input id="am-cut" min={0} max={168} {...num("amendments", "dateChangeCutoffHours")} />
                   </Field>
+                </div>
+              </Panel>
+              <Panel title="Baggage">
+                <p className="mb-3 text-[12.5px] text-gray-500">
+                  What each seat-booking passenger can bring for free, shown before payment and on the booking. Changes apply to new bookings.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Free bags per passenger" htmlFor="bg-free">
+                    <Input id="bg-free" min={0} max={5} {...num("baggage", "freeBagsPerPassenger")} />
+                  </Field>
+                  <Field label="Maximum weight per bag (kg)" htmlFor="bg-kg">
+                    <Input id="bg-kg" min={1} max={50} {...num("baggage", "maxBagWeightKg")} />
+                  </Field>
+                  <Field label="Note for customers (optional)" htmlFor="bg-note" className="sm:col-span-2" hint="e.g. Plus one small hand bag. No gas cylinders or livestock.">
+                    <Input id="bg-note" maxLength={200} value={form.baggage.note} onChange={(e) => setBaggage({ note: e.target.value })} />
+                  </Field>
+                  <Field label="Extra bags are paid" htmlFor="bg-pay" className="sm:col-span-2">
+                    <Select
+                      id="bg-pay"
+                      value={form.baggage.extraBagPayment}
+                      onValueChange={(v) => setBaggage({ extraBagPayment: v as Editable["baggage"]["extraBagPayment"] })}
+                      options={[
+                        { value: "terminal", label: "At the terminal (customers see a notice)" },
+                        { value: "in_app", label: "In the app (customers buy them before paying, or later in Manage Booking)" },
+                      ]}
+                    />
+                  </Field>
+                  {form.baggage.extraBagPayment === "in_app" && (
+                    <>
+                      <Field label="Price per extra bag" htmlFor="bg-mode" className="sm:col-span-2">
+                        <Select
+                          id="bg-mode"
+                          value={form.baggage.extraBagCharge}
+                          onValueChange={(v) => setBaggage({ extraBagCharge: v as Editable["baggage"]["extraBagCharge"] })}
+                          options={[
+                            { value: "percentage", label: "A percentage of the seat fare (scales with distance)" },
+                            { value: "flat", label: "A flat price on every route" },
+                          ]}
+                        />
+                      </Field>
+                      {form.baggage.extraBagCharge === "percentage" ? (
+                        <>
+                          <Field label="% of seat fare per bag" htmlFor="bg-pct">
+                            <Input id="bg-pct" min={0} max={100} {...num("baggage", "extraBagPercent")} />
+                          </Field>
+                          <Field label="Minimum per bag (₦)" htmlFor="bg-min">
+                            <Input id="bg-min" min={0} step={50} {...naira("extraBagMinKobo")} />
+                          </Field>
+                        </>
+                      ) : (
+                        <Field label="Price per bag (₦)" htmlFor="bg-flat">
+                          <Input id="bg-flat" min={0} step={50} {...naira("extraBagFlatKobo")} />
+                        </Field>
+                      )}
+                      <Field label="Most extra bags per passenger" htmlFor="bg-max" hint="Online. More can still be arranged at the terminal.">
+                        <Input id="bg-max" min={0} max={5} {...num("baggage", "maxExtraBagsPerPassenger")} />
+                      </Field>
+                      <p className="text-[12px] text-gray-500 sm:col-span-2">
+                        {form.baggage.extraBagCharge === "percentage"
+                          ? `Example: on a ₦20,000 seat, an extra bag costs ₦${Math.max(form.baggage.extraBagMinKobo / 100, Math.round(20000 * form.baggage.extraBagPercent) / 100).toLocaleString()}.`
+                          : `Every extra bag costs ₦${(form.baggage.extraBagFlatKobo / 100).toLocaleString()}.`}{" "}
+                        Bag fees are refunded at the same rate as the fare if a booking is cancelled.
+                      </p>
+                    </>
+                  )}
                 </div>
               </Panel>
               <Panel title="Private hire">

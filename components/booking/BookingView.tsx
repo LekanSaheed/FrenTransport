@@ -3,6 +3,17 @@ import { PaymentBadge, StatusBadge } from "@/components/ui/feedback";
 import { Card, DetailList, SectionTitle } from "@/components/ui/layout";
 import { BOOKING_TYPE_LABEL, formatDateTime, naira } from "@/libs/format";
 import type { BookingDetails, BookingSummary } from "@/libs/types";
+import { allowanceText, extraBagsText } from "@/libs/baggage";
+
+/** Terminal name and city, with its street address underneath when known. */
+function Terminal({ t }: { t: { name: string; city: string; address?: string | null } }) {
+  return (
+    <span className="block">
+      {t.name}, {t.city}
+      {t.address && <span className="mt-0.5 block text-[12.5px] font-normal text-gray-500">{t.address}</span>}
+    </span>
+  );
+}
 
 /** What the booking is: trip or hire details, passengers, price. Shared by Status and Manage. */
 export default function BookingView({ booking }: { booking: BookingSummary | BookingDetails }) {
@@ -11,11 +22,27 @@ export default function BookingView({ booking }: { booking: BookingSummary | Boo
 
   if (b.trip) {
     details.push(
-      ["From", `${b.trip.origin.name}, ${b.trip.origin.city}`],
-      ["To", `${b.trip.destination.name}, ${b.trip.destination.city}`],
+      ["From", <Terminal key="from" t={b.trip.origin} />],
+      ["To", <Terminal key="to" t={b.trip.destination} />],
       ["Departure", formatDateTime(b.trip.departureAt)],
       ["Vehicle", b.trip.vehicle],
+      ...(b.trip.plateNumber ? [["Plate number", <span key="plate" className="font-mono font-extrabold tracking-[0.06em]">{b.trip.plateNumber}</span>] as [React.ReactNode, React.ReactNode]] : []),
       ["Seats", b.seats?.join(", ") ?? "—"],
+      ...(b.baggage
+        ? [
+            [
+              "Baggage",
+              <span key="bags" className="block">
+                {allowanceText(b.baggage.freeBagsPerPassenger, b.baggage.maxBagWeightKg)}
+                {b.baggage.extraBags > 0 && (
+                  <span className="mt-0.5 block text-[12.5px] font-semibold text-primary">
+                    + {extraBagsText(b.baggage.extraBags)} paid · {b.baggage.freeBags + b.baggage.extraBags} bags in total
+                  </span>
+                )}
+              </span>,
+            ] as [React.ReactNode, React.ReactNode],
+          ]
+        : []),
     );
   }
   if (b.hire) {

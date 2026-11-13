@@ -12,6 +12,9 @@ import { api, ApiError, newIdempotencyKey } from "@/libs/api";
 import { durationLabel, formatDateTime, naira } from "@/libs/format";
 import { startPayment } from "@/libs/payment";
 import { useCustomer } from "@/libs/customer";
+import { reloadPublicConfig, useBaggagePolicy } from "@/libs/site";
+import { extraBagFeeKobo, extraBagsText } from "@/libs/baggage";
+import BaggagePicker from "./BaggagePicker";
 import type { BookingSummary, TripDetails } from "@/libs/types";
 
 type Passenger = { fullName: string; gender: "" | "male" | "female" };
@@ -38,6 +41,8 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [booking, setBooking] = useState<BookingSummary | null>(null);
+  const baggage = useBaggagePolicy();
+  const [extraBags, setExtraBags] = useState(0);
   // One key per checkout attempt; a retry after an error reuses it so no second hold is created.
   const idemKey = useRef(newIdempotencyKey());
 
@@ -78,7 +83,11 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
   }
 
   const available = trip.seatMap.seats.filter((s) => s.available).length;
-  const total = trip.priceKobo * pax;
+  // Extra bags only when Settings lets customers pay for them here; the API re-checks the price.
+  const inAppBags = baggage?.extraBagPayment === "in_app";
+  const bagFee = baggage ? extraBagFeeKobo(baggage, trip.priceKobo) : 0;
+  const bags = inAppBags ? Math.min(extraBags, baggage!.maxExtraBagsPerPassenger * pax) : 0;
+  const total = trip.priceKobo * pax + bags * bagFee;
 
   function toggleSeat(label: string) {
     setError(null);
@@ -117,6 +126,7 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
           passengers: passengers.map((p) => ({ fullName: p.fullName.trim(), ...(p.gender && { gender: p.gender }) })),
           contact,
           ...(nextOfKin.fullName && { nextOfKin }),
+          ...(bags > 0 && { extraBags: bags }),
         },
         idemKey.current,
       );
@@ -128,6 +138,13 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
         await load();
         setStep(0);
         setError("Sorry — one of your seats was just taken. Please choose another seat.");
+        return;
+      }
+      if (err.code === "EXTRA_BAGS_AT_TERMINAL" || err.code === "TOO_MANY_BAGS") {
+        // Baggage settings changed while they were booking: show the current rules.
+        reloadPublicConfig();
+        setExtraBags(0);
+        setError(`${err.message} We've removed the extra bags; please review and pay again.`);
         return;
       }
       if (err.code === "VALIDATION_ERROR") {
@@ -253,6 +270,12 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
                 ...(nextOfKin.fullName ? [["Next of kin", `${nextOfKin.fullName} · ${nextOfKin.phone}`] as [string, string]] : []),
               ]}
             />
+            {baggage && (
+              <div className="mt-5 border-t border-border-stroke pt-5">
+                <SectionTitle>Baggage</SectionTitle>
+                <BaggagePicker policy={baggage} passengers={pax} feePerBagKobo={bagFee} value={bags} onChange={setExtraBags} disabled={submitting} />
+              </div>
+            )}
             <Alert tone="info" className="mt-4">
               Your seats are held for 15 minutes once you continue. Payment is handled securely by Paystack.
             </Alert>
@@ -276,6 +299,7 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
               ["Vehicle", trip.vehicle.category],
               ["Seats", seats.length ? seats.join(", ") : "—"],
               ["Fare", `${naira(trip.priceKobo)} × ${pax}`],
+              ...(bags > 0 ? [[extraBagsText(bags), `${naira(bagFee)} × ${bags}`] as [string, string]] : []),
               [<span key="t" className="font-semibold text-black">Total</span>, <span key="v" className="text-[16px]">{naira(total)}</span>],
             ]}
           />

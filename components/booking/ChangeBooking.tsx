@@ -10,8 +10,10 @@ import { api, type ApiError } from "@/libs/api";
 import { durationLabel, formatDateTime, formatTime, naira, todayInLagos } from "@/libs/format";
 import { cn } from "@/libs/utils";
 import type { BookingDetails, DateChangeOption, TripDetails } from "@/libs/types";
+import { BaggageAllowance, ExtraBagStepper } from "./BaggagePicker";
+import { extraBagsText } from "@/libs/baggage";
 
-type Section = "names" | "seats" | "date";
+type Section = "names" | "seats" | "date" | "bags";
 
 /**
  * Self-service changes to a seat booking: passenger names and seats (free,
@@ -33,7 +35,8 @@ export default function ChangeBooking({
   const changes = booking.changes;
   if (!changes || booking.type !== "seat") return null;
   const { rules, pending } = changes;
-  if (!rules.names.allowed && !rules.seats.allowed && !rules.dateChange.allowed && !pending) return null;
+  const bags = changes.baggage;
+  if (!rules.names.allowed && !rules.seats.allowed && !rules.dateChange.allowed && !bags?.allowed && !pending) return null;
 
   const toggle = (s: Section) => setOpen(open === s ? null : s);
   const props = { booking, token, onUpdated, onError, close: () => setOpen(null) };
@@ -58,6 +61,17 @@ export default function ChangeBooking({
         >
           <DateForm {...props} />
         </Row>
+        {bags && (
+          <Row
+            title="Extra baggage"
+            hint={`${naira(bags.feePerBagKobo)} per bag · up to ${bags.remaining} more`}
+            rule={{ allowed: bags.allowed, reason: bags.reason }}
+            open={open === "bags"}
+            onToggle={() => toggle("bags")}
+          >
+            <BagsForm {...props} />
+          </Row>
+        )}
       </div>
     </Card>
   );
@@ -181,6 +195,39 @@ function SeatsForm({ booking, token, onUpdated, onError, close }: FormProps) {
 }
 
 /* --------------------------------- date ---------------------------------- */
+
+/* ---------------------------------- bags --------------------------------- */
+
+function BagsForm({ booking, token, onError }: FormProps) {
+  const rule = booking.changes!.baggage!;
+  const [count, setCount] = useState(1);
+  const [busy, setBusy] = useState(false);
+  const fee = count * rule.feePerBagKobo;
+  return (
+    <div>
+      {booking.baggage && (
+        <BaggageAllowance freeBagsPerPassenger={booking.baggage.freeBagsPerPassenger} maxBagWeightKg={booking.baggage.maxBagWeightKg} note={booking.baggage.note} />
+      )}
+      <ExtraBagStepper label="Extra bags to add" value={count} max={rule.remaining} feePerBagKobo={rule.feePerBagKobo} onChange={(n) => setCount(Math.max(1, n))} disabled={busy} />
+      <Button
+        className="mt-3"
+        fullWidth
+        label={`Pay ${naira(fee)} for ${extraBagsText(count)}`}
+        loading={busy}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            window.location.href = (await api.manage.addBaggage(booking.reference, token, count)).authorizationUrl;
+          } catch (e) {
+            onError(e);
+            setBusy(false);
+          }
+        }}
+      />
+      <p className="mt-2 text-[12px] text-gray-500">Paid by card through Paystack. Bag fees are refunded at the same rate as your fare if you cancel.</p>
+    </div>
+  );
+}
 
 function DateForm({ booking, token, onUpdated, onError }: FormProps) {
   const departure = booking.trip!.departureAt;

@@ -26,6 +26,24 @@ export function useSupportContact() {
   return contact;
 }
 
+/** Baggage policy from Admin → Settings (null while loading or if unavailable). */
+export function useBaggagePolicy() {
+  const [policy, setPolicy] = useState<PublicConfig["baggage"] | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadConfig().then((c) => live && setPolicy(c?.baggage ?? null));
+    return () => {
+      live = false;
+    };
+  }, []);
+  return policy;
+}
+
+/** Forget the cached settings (e.g. the API said they changed mid-checkout). */
+export function reloadPublicConfig() {
+  configPromise = null;
+}
+
 /** "08031234567" → "+2348031234567" for tel: and WhatsApp links. */
 export function intlPhone(phone: string) {
   const digits = phone.replace(/[^\d+]/g, "");

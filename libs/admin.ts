@@ -296,11 +296,25 @@ export interface PaymentRow {
   refunds: { amountKobo: number; reason: string; status: string; requestedAt: string; processedAt: string | null }[];
 }
 
+/** Free baggage per passenger and how extra bags are paid for (seat bookings). */
+export interface BaggageSettings {
+  freeBagsPerPassenger: number;
+  maxBagWeightKg: number;
+  note: string;
+  extraBagPayment: "terminal" | "in_app";
+  extraBagCharge: "percentage" | "flat";
+  extraBagPercent: number;
+  extraBagMinKobo: number;
+  extraBagFlatKobo: number;
+  maxExtraBagsPerPassenger: number;
+}
+
 export interface SettingsData {
   booking: { seatHoldMinutes: number; bookingCutoffMinutes: number; quoteValidityHours: number };
   cancellation: { refundWindowHours: number; refundPercent: number };
   hire: { carMinLeadHours: number; busMinLeadHours: number };
   amendments: { dateChangeCharge: "percentage" | "fare_difference"; feePercent: number; dateChangeCutoffHours: number };
+  baggage: BaggageSettings;
   contact: { supportEmail: string; supportPhone: string; adminNotificationEmail: string };
   updatedAt?: string;
   payments: { provider: string; mode: "live" | "test" | "not_configured"; webhookPath: string };

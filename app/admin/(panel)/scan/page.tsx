@@ -115,6 +115,21 @@ function Scanner() {
           {result && busy !== "scan" && (
             <>
               <Verdict result={result} />
+              {result.booking.trip && (
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-border-stroke bg-white px-4 py-3">
+                  <div>
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-gray-500">Vehicle</p>
+                    <p className="text-[14px] font-bold text-ink">
+                      {result.booking.trip.vehicle} · {formatDateTime(result.booking.trip.departureAt)}
+                    </p>
+                  </div>
+                  {result.booking.trip.plateNumber && (
+                    <span className="rounded-[10px] border-2 border-ink bg-white px-3 py-1.5 font-mono text-[18px] font-black tracking-[0.12em] text-ink">
+                      {result.booking.trip.plateNumber}
+                    </span>
+                  )}
+                </div>
+              )}
               {result.canCheckIn &&
                 (can("bookings.checkin") ? (
                   <Button fullWidth label={`Check in ${result.booking.passengers?.length ? `${result.booking.passengers.length} passenger${result.booking.passengers.length > 1 ? "s" : ""}` : "booking"}`} loading={busy === "checkin"} onClick={checkIn} />

@@ -73,6 +73,17 @@ export interface PublicConfig {
   contact: { supportEmail: string; supportPhone: string };
   booking: { seatHoldMinutes: number; bookingCutoffMinutes: number };
   amendments: { dateChangeCharge: "percentage" | "fare_difference"; feePercent: number; dateChangeCutoffHours: number };
+  baggage: {
+    freeBagsPerPassenger: number;
+    maxBagWeightKg: number;
+    note: string;
+    extraBagPayment: "terminal" | "in_app";
+    extraBagCharge: "percentage" | "flat";
+    extraBagPercent: number;
+    extraBagMinKobo: number;
+    extraBagFlatKobo: number;
+    maxExtraBagsPerPassenger: number;
+  };
 }
 
 export const api = {
@@ -94,6 +105,8 @@ export const api = {
       passengers: { fullName: string; gender?: "male" | "female" }[];
       contact: Contact;
       nextOfKin?: { fullName: string; phone: string };
+      /** Extra bags bought at checkout (only when they're paid in the app). */
+      extraBags?: number;
     },
     idempotencyKey: string,
   ) => request<BookingSummary>("/bookings/seat", { method: "POST", body, idempotencyKey }),
@@ -154,6 +167,9 @@ export const api = {
         token,
         body: { tripId },
       }),
+    /** Buys more extra bags; returns a Paystack checkout. */
+    addBaggage: (ref: string, token: string | undefined, bags: number) =>
+      request<{ reference: string; authorizationUrl: string }>(`/manage/bookings/${encodeURIComponent(ref)}/baggage`, { method: "POST", token, body: { bags } }),
     payDateChange: (ref: string, token: string | undefined) =>
       request<{ reference: string; authorizationUrl: string }>(`/manage/bookings/${encodeURIComponent(ref)}/date-change/pay`, { method: "POST", token }),
     cancelDateChange: (ref: string, token: string | undefined) =>
