@@ -77,7 +77,7 @@ export default function AdminBookingDetail({ reference }: { reference: string })
                     {b.payments.map((p) => (
                       <li key={p.reference} className="flex flex-wrap items-center justify-between gap-2 rounded-[8px] border border-border-stroke p-3">
                         <div>
-                          <Link href={`/admin/payments/${p.reference}`} className="font-semibold text-primary">
+                          <Link href={`/admin/payments/${p.reference}`} prefetch={false} className="font-semibold text-primary">
                             {p.reference}
                           </Link>
                           <p className="text-[12px] text-gray-500">

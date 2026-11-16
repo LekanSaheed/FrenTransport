@@ -193,8 +193,9 @@ function TripCard({ trip, passengers }: { trip: TripSummary; passengers: number 
               <p className="font-display text-[22px] font-black tracking-n-2 text-ink">{naira(trip.priceKobo)}</p>
               <p className="text-[11px] text-gray-500">per seat</p>
             </div>
+            {/* No background loading: the checkout page is server-rendered, one run per result otherwise. */}
             {trip.bookable ? (
-              <Button href={`/book/${trip.id}?pax=${passengers}`} label="Select seats" variant="accent" />
+              <Button href={`/book/${trip.id}?pax=${passengers}`} label="Select seats" variant="accent" prefetch={false} />
             ) : (
               <span className="text-[12px] text-gray-500">{trip.availableSeats === 0 ? "Sold out" : `Not enough seats for ${passengers}`}</span>
             )}

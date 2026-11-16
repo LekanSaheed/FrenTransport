@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   images: {
     // Gallery images (Admin → Gallery) live on Cloudinary; SmartImage asks Cloudinary for resized copies.
     remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" }],
+    // Images in /public rarely change: keep resized copies for 31 days instead of a few hours,
+    // so the host doesn't re-process (and bill) them all day. Rename a file to replace it.
+    minimumCacheTTL: 60 * 60 * 24 * 31,
   },
   async headers() {
     const security = [
@@ -18,10 +21,9 @@ const nextConfig: NextConfig = {
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
       { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }, // ignored over plain http (local dev)
     ];
-    const privatePages = [
-      { key: "Cache-Control", value: "no-store" },
-      { key: "X-Robots-Tag", value: "noindex, nofollow" },
-    ];
+    // Admin and account pages are empty shells (their data comes from the API after sign-in),
+    // so browsers may cache them like any page; they're just kept out of search engines.
+    const privatePages = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
     return [
       { source: "/:path*", headers: security },
       { source: "/admin/:path*", headers: privatePages },

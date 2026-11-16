@@ -1,5 +1,5 @@
 // Adds the Obere logo to the van's side panel and silver alloy rims to both wheels.
-// Usage (from Frontend/): node design/brand-hiace.cjs design/hiace-original.png public/logo.png public/fleet/hiace.png
+// Usage (from Frontend/): node design/brand-hiace.cjs design/hiace-original.png design/logo-original.png public/fleet/hiace.png
 const sharp = require("sharp");
 const [, , input, logoPath, output] = process.argv;
 

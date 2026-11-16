@@ -11,6 +11,11 @@ interface buttonProps {
   fullWidth?: boolean;
   /** Renders a Next.js link styled as a button. */
   href?: string;
+  /**
+   * Link buttons only. false: don't load the page in the background when the button
+   * scrolls into view (use for server-rendered pages and long lists, to save hosting costs).
+   */
+  prefetch?: boolean;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -30,6 +35,7 @@ const Button = ({
   className,
   fullWidth,
   href,
+  prefetch,
   onClick,
   type = "button",
   disabled,
@@ -50,7 +56,7 @@ const Button = ({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} {...(prefetch === false && { prefetch: false })}>
         {label}
       </Link>
     );

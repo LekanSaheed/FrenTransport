@@ -42,7 +42,7 @@ const Footer = () => {
                 <ul className="mt-4 space-y-3">
                   {col.items.map((item) => (
                     <li key={item.path}>
-                      <Link href={item.path} className="text-[14px] font-semibold text-white/80 transition hover:text-accent">
+                      <Link href={item.path} prefetch={false} className="text-[14px] font-semibold text-white/80 transition hover:text-accent">
                         {item.label}
                       </Link>
                     </li>

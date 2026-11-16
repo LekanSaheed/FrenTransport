@@ -48,6 +48,7 @@ export default async function RoutesPage() {
                     <li key={r.slug}>
                       <Link
                         href={`/routes/${r.slug}`}
+                        prefetch={false}
                         className="flex h-full flex-col rounded-[16px] border border-border-stroke bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lift"
                       >
                         <span className="font-display text-[17px] font-black text-ink">

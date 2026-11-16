@@ -124,7 +124,7 @@ export default function TripDetailPage() {
                   columns={[
                     { header: "Seat", cell: (p) => <strong>{p.seat}</strong> },
                     { header: "Name", cell: (p) => p.fullName },
-                    { header: "Booking", cell: (p) => <Link href={`/admin/bookings/${p.bookingReference}`} className="text-primary">{p.bookingReference}</Link> },
+                    { header: "Booking", cell: (p) => <Link href={`/admin/bookings/${p.bookingReference}`} prefetch={false} className="text-primary">{p.bookingReference}</Link> },
                     { header: "Phone", cell: (p) => p.contactPhone },
                     { header: "Status", cell: (p) => <div className="flex flex-col items-start gap-1"><StatusBadge status={p.bookingStatus} /><PaymentBadge status={p.paymentStatus} /></div> },
                   ]}

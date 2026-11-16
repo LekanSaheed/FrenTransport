@@ -248,7 +248,8 @@ export function DataTable<T>({
               {columns.map((c, i) => (
                 <td key={c.header} className={cn("px-4 py-3 align-top", c.className)}>
                   {href && i === 0 ? (
-                    <Link href={href(row)} className="font-bold text-primary hover:underline">
+                    // No background loading: detail pages are server-rendered (one run per row otherwise).
+                    <Link href={href(row)} prefetch={false} className="font-bold text-primary hover:underline">
                       {c.cell(row)}
                     </Link>
                   ) : (

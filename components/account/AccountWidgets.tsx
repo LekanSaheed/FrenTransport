@@ -43,6 +43,7 @@ export function BookingRow({ b }: { b: AccountBooking }) {
   return (
     <Link
       href={`/account/bookings/${b.reference}`}
+      prefetch={false}
       className="flex flex-col gap-3 rounded-[10px] border border-border-stroke bg-white p-4 transition hover:border-primary/50 sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="min-w-0">

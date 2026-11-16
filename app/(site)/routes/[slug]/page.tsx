@@ -175,7 +175,7 @@ export default async function CityRoutePage({ params }: Params) {
                 <ul className="mt-2 space-y-1.5">
                   {more.map((m) => (
                     <li key={m.slug}>
-                      <Link href={`/routes/${m.slug}`} className="text-[14px] font-semibold text-primary hover:underline">
+                      <Link href={`/routes/${m.slug}`} prefetch={false} className="text-[14px] font-semibold text-primary hover:underline">
                         {m.from} to {m.to}
                       </Link>
                     </li>

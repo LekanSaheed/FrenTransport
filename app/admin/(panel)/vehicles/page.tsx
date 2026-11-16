@@ -103,7 +103,7 @@ function VehiclesTab() {
               header: "Next trip",
               cell: (v) =>
                 v.nextTrip ? (
-                  <Link href={`/admin/trips/${v.nextTrip.id}`} className="block leading-tight hover:underline">
+                  <Link href={`/admin/trips/${v.nextTrip.id}`} prefetch={false} className="block leading-tight hover:underline">
                     <span className="font-semibold">
                       {v.nextTrip.from?.city} → {v.nextTrip.to?.city}
                     </span>

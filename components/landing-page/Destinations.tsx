@@ -54,6 +54,7 @@ const Destinations = async () => {
                 <li key={r.slug}>
                   <Link
                     href={`/routes/${r.slug}`}
+                    prefetch={false}
                     className="flex items-center justify-between gap-3 rounded-[12px] border border-border-stroke bg-white px-4 py-3 text-[14px] font-bold text-ink transition hover:border-primary/40"
                   >
                     <span>
