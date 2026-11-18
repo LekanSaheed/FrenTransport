@@ -35,7 +35,7 @@ const Footer = () => {
               </ul>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {footerLinks.map((col) => (
               <div key={col.title}>
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/40">{col.title}</p>

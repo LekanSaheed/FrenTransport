@@ -14,6 +14,9 @@ export function BaggageAllowance({ freeBagsPerPassenger, maxBagWeightKg, note }:
       <div>
         <p className="text-[14px] font-bold text-ink">Included: {allowanceText(freeBagsPerPassenger, maxBagWeightKg)}</p>
         {note && <p className="mt-0.5 text-[13px] text-gray-600">{note}</p>}
+        <a href="/legal/baggage" target="_blank" className="mt-1 inline-block text-[12.5px] font-semibold text-primary underline-offset-2 hover:underline">
+          Baggage Policy
+        </a>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getCityRoutes } from "@/libs/routes";
 import { SITE_URL } from "@/libs/seo";
+import { LEGAL_DOCUMENTS } from "@/libs/legal";
 
 /** /sitemap.xml: the public pages plus one page per city pair served (refreshed hourly). */
 export const revalidate = 3600;
@@ -24,6 +25,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page("/booking-status", 0.4, "monthly"),
     page("/manage", 0.4, "monthly"),
     page("/about", 0.5, "monthly"),
+    page("/legal", 0.3, "yearly"),
+    ...LEGAL_DOCUMENTS.map((d) => page(`/legal/${d.slug}`, 0.3, "yearly")),
     page("/contact", 0.5, "monthly"),
   ];
 }

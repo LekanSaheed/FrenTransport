@@ -279,6 +279,21 @@ export default function SeatCheckout({ tripId }: { tripId: string }) {
             <Alert tone="info" className="mt-4">
               Your seats are held for 15 minutes once you continue. Payment is handled securely by Paystack.
             </Alert>
+            <p className="mt-3 text-[12.5px] text-gray-500">
+              By paying, you agree to our{" "}
+              <Link href="/legal/terms" target="_blank" className="font-semibold text-primary underline-offset-2 hover:underline">
+                Terms and Conditions
+              </Link>
+              ,{" "}
+              <Link href="/legal/refunds" target="_blank" className="font-semibold text-primary underline-offset-2 hover:underline">
+                Refund Policy
+              </Link>{" "}
+              and{" "}
+              <Link href="/legal/customer-privacy" target="_blank" className="font-semibold text-primary underline-offset-2 hover:underline">
+                Customer Privacy Policy
+              </Link>
+              .
+            </p>
             <div className="mt-6 flex justify-between gap-3">
               <Button variant="secondary" label="Back" onClick={() => setStep(1)} disabled={submitting} />
               <Button label={`Pay ${naira(total)}`} onClick={pay} loading={submitting} />

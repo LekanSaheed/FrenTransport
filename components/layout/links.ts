@@ -33,6 +33,16 @@ export const footerLinks = [
       { label: "Contact", path: "/contact" },
     ],
   },
+  {
+    title: "Legal",
+    items: [
+      { label: "Terms and Conditions", path: "/legal/terms" },
+      { label: "Refund Policy", path: "/legal/refunds" },
+      { label: "Baggage Policy", path: "/legal/baggage" },
+      { label: "Customer Privacy Policy", path: "/legal/customer-privacy" },
+      { label: "Driver Privacy Policy", path: "/legal/driver-privacy" },
+    ],
+  },
 ];
 
 export default links;

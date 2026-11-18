@@ -72,6 +72,7 @@ export interface Contact {
 export interface PublicConfig {
   contact: { supportEmail: string; supportPhone: string };
   booking: { seatHoldMinutes: number; bookingCutoffMinutes: number };
+  cancellation: { refundWindowHours: number; refundPercent: number };
   amendments: { dateChangeCharge: "percentage" | "fare_difference"; feePercent: number; dateChangeCutoffHours: number };
   baggage: {
     freeBagsPerPassenger: number;
