@@ -9,7 +9,7 @@ const SERVICES = [
   {
     title: "Book a seat",
     text: "Daily departures on fixed routes. Search by date, pick your seat on the map and pay online in minutes.",
-    img: "/fleet/sienna.jpg",
+    img: "/fleet/hiace-classic.webp",
     href: "/book",
     cta: "Find a trip",
     tag: "Most popular",
@@ -24,7 +24,7 @@ const SERVICES = [
   {
     title: "Hire a bus",
     text: "A whole bus for weddings, church and school trips or staff transport. Tell us the plan and we'll send a quote.",
-    img: "/fleet/hiace.png",
+    img: "/fleet/hiace.webp",
     href: "/hire/bus",
     cta: "Request a quote",
   },

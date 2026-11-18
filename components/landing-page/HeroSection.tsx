@@ -78,7 +78,7 @@ const HeroSection = () => {
             <div className="relative hidden lg:block">
               <div className="relative mx-auto aspect-4/3 w-full max-w-[460px] rotate-[-2deg] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] ring-8 ring-white/10">
                 <Image
-                  src="/fleet/hiace.png"
+                  src="/fleet/hiace.webp"
                   alt="Obere Transport minibus"
                   fill
                   priority
