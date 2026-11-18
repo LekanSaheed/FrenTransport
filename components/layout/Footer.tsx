@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { HiOutlineEnvelope, HiOutlinePhone } from "react-icons/hi2";
 import Container from "./Container";
 import Logo from "./Logo";
@@ -52,9 +53,12 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <div className="mt-14 flex flex-col gap-2 border-t border-white/10 pt-6 text-[12px] text-white/45 sm:flex-row sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-[12px] text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} Obere Transport Ltd. All rights reserved.</p>
-          <p>Payments are processed securely by Paystack.</p>
+          {/* Paystack's official "Secured by Paystack" badge (media kit). Small static file: served as is. */}
+          <a href="https://paystack.com" target="_blank" rel="noopener noreferrer" className="inline-flex self-start rounded-[8px] bg-white px-2 py-1 sm:self-auto" aria-label="Payments secured by Paystack">
+            <Image src="/paystack/sbp-badge-white.png" alt="Secured by Paystack" width={148} height={32} unoptimized className="h-8 w-auto" />
+          </a>
         </div>
       </Container>
     </footer>
